@@ -5,8 +5,8 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 const videoRoutes = require('./routes/videos');
-const { auth } = require('./middleware/auth');
 const userRoutes = require('./routes/users');
+const { auth } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,9 +21,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/users', userRoutes);
 
-
 // Serve processed videos
 app.use('/videos', express.static(path.join(__dirname, 'uploads', 'processed')));
+// Serve avatars
+app.use('/avatars', express.static(path.join(__dirname, 'uploads', 'avatars')));
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
