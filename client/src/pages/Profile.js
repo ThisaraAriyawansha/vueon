@@ -425,7 +425,7 @@ const Profile = () => {
                   activeTab === 'admin' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                Admin
+                Manage Videos
               </button>
             )}
           </nav>
