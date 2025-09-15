@@ -18,6 +18,7 @@ const Watch = () => {
   const [videoError, setVideoError] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
   const [retryCount, setRetryCount] = useState(0);
+  const [videoReady, setVideoReady] = useState(false);
 
   const { id } = useParams();
   const { currentUser } = useAuth();
@@ -35,6 +36,7 @@ const Watch = () => {
     setVideoUrl('');
     setRetryCount(0);
     setLoading(true);
+    setVideoReady(false);
   }, [id]);
 
   // Cleanup function
@@ -113,21 +115,24 @@ const Watch = () => {
         setComments(commentsResponse.data);
         setLikeCount(videoResponse.data.like_count || 0);
 
-        // Construct and validate video URL
+        // Construct and validate video URL - FIXED PART
         const filename = videoResponse.data.filename;
         let url = '';
         
         if (filename) {
+          // Remove 'videos/' prefix if it exists in filename
+          const cleanFilename = filename.startsWith('videos/') ? filename : `videos/${filename}`;
+          
           if (filename.includes('m3u8')) {
-            url = `http://localhost:5000/videos/${filename}`;
+            url = `http://localhost:5000/${cleanFilename}`;
             console.log('HLS video URL constructed:', url);
           } else if (filename.match(/\.(mp4|webm|ogg)$/i)) {
-            url = `http://localhost:5000/videos/${filename}`;
+            url = `http://localhost:5000/${cleanFilename}`;
             console.log('Direct video URL constructed:', url);
           } else {
             console.warn(`Invalid video file extension: ${filename}`);
             // Try to construct a URL anyway
-            url = `http://localhost:5000/videos/${filename}`;
+            url = `http://localhost:5000/${cleanFilename}`;
           }
         } else {
           console.error('No filename provided in video data');
@@ -350,6 +355,7 @@ const Watch = () => {
       setVideoError(false);
       setRetryCount(0);
       setError(''); // Clear any previous errors
+      setVideoReady(true);
       console.log('Video player ready');
     }
   }, []);
@@ -461,6 +467,7 @@ const Watch = () => {
     setVideoError(false);
     setRetryCount(0);
     setError('');
+    setVideoReady(false);
     
     // Force re-render of video player
     const currentUrl = videoUrl;
@@ -543,41 +550,19 @@ const Watch = () => {
         <div className="lg:col-span-2">
           <div className="overflow-hidden bg-black rounded-lg aspect-video">
             {!videoError && videoUrl ? (
-              <ReactPlayer
-                ref={playerRef}
-                url={videoUrl}
-                width="100%"
-                height="100%"
-                controls
-                playing={false}
-                onError={handleVideoError}
-                onStart={() => console.log('Video started playing')}
-                onPlay={() => console.log('Video playing')}
-                onReady={handleVideoReady}
-                config={{
-                  file: {
-                    attributes: {
-                      crossOrigin: 'anonymous',
-                      preload: 'metadata',
-                    },
-                    forceHLS: videoUrl.includes('.m3u8'),
-                    hlsOptions: {
-                      enableWorker: false,
-                      lowLatencyMode: false, // Disabled for better compatibility
-                      backBufferLength: 90,
-                      maxBufferLength: 30,
-                    },
-                  },
-                }}
-                fallback={
-                  <div className="flex items-center justify-center w-full h-full text-white bg-gray-800">
-                    <div className="text-center">
-                      <div className="w-12 h-12 mx-auto mb-4 border-b-2 border-white rounded-full animate-spin"></div>
-                      <p>Loading video...</p>
-                    </div>
-                  </div>
-                }
-              />
+                // Replace ReactPlayer temporarily with:
+                <video 
+                  controls 
+                  width="100%" 
+                  height="100%"
+                  onError={(e) => console.error('Video element error:', e)}
+                  onLoadStart={() => console.log('Load start')}
+                  onLoadedData={() => console.log('Loaded data')}
+                  onCanPlay={() => console.log('Can play')}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
             ) : (
               <div className="flex items-center justify-center w-full h-full text-white bg-gray-800">
                 <div className="text-center">
@@ -598,6 +583,7 @@ const Watch = () => {
                   <p className="mb-4 text-sm text-gray-400">
                     {retryCount > 0 ? `Retry attempt ${retryCount}/2 failed` : 'The video could not be loaded'}
                   </p>
+                  <p className="mb-4 text-xs text-gray-500">URL: {videoUrl}</p>
                   <button
                     onClick={handleRetry}
                     disabled={retryCount >= 2}
@@ -756,7 +742,7 @@ const Watch = () => {
               >
                 <div className="relative flex-shrink-0 w-40 h-24 overflow-hidden bg-gray-300 rounded-lg">
                   <img
-                    src={suggestedVideo.thumbnail ? `http://localhost:5000/videos/${suggestedVideo.thumbnail}` : '/default-thumbnail.jpg'}
+                    src={suggestedVideo.thumbnail ? `http://localhost:5000/${suggestedVideo.thumbnail}` : '/default-thumbnail.jpg'}
                     alt={suggestedVideo.title}
                     className="object-cover w-full h-full"
                     onError={(e) => {

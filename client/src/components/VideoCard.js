@@ -36,11 +36,11 @@ const VideoCard = ({ video }) => {
     
     // Check if thumbnail is in a subdirectory (processed video)
     if (video.thumbnail.includes('/')) {
-      return `http://localhost:5000/videos/${video.thumbnail}`;
+      return `http://localhost:5000/${video.thumbnail}`;
     }
     
     // Default case - assume it's in the thumbnails directory
-    return `http://localhost:5000/thumbnails/${video.thumbnail}`;
+    return `http://localhost:5000/${video.thumbnail}`;
   };
 
   // Handle avatar path - FIXED: Check if avatar exists and handle properly

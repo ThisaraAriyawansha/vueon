@@ -4,16 +4,14 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../config/database');
 const { auth } = require('../middleware/auth');
-const { processVideo, generateThumbnail, getVideoDuration } = require('../utils/ffmpeg');
 const router = express.Router();
 
 // Create upload directories if they don't exist
 const createDirectories = () => {
   const directories = [
-    'uploads/raw',
-    'uploads/processed',
-    'uploads/avatars',
-    'uploads/thumbnails'
+    'uploads/videos',
+    'uploads/thumbnails',
+    'uploads/avatars'
   ];
   
   directories.forEach(dir => {
@@ -30,7 +28,7 @@ createDirectories();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === 'video') {
-      cb(null, 'uploads/raw/');
+      cb(null, 'uploads/videos/');
     } else if (file.fieldname === 'thumbnail') {
       cb(null, 'uploads/thumbnails/');
     } else {
@@ -76,70 +74,32 @@ router.post('/upload', auth, upload.fields([
     const videoFile = req.files.video[0];
     const thumbnailFile = req.files.thumbnail ? req.files.thumbnail[0] : null;
     
-    console.log('File uploaded:', videoFile.filename);
-    const filename = path.parse(videoFile.filename).name;
-    const outputDir = path.join('uploads', 'processed');
-    const rawFilePath = videoFile.path;
+    console.log('Video file uploaded:', videoFile.filename);
+    console.log('Thumbnail file uploaded:', thumbnailFile ? thumbnailFile.filename : 'None');
     
-    // Get video duration
-    let duration = 0;
-    try {
-      duration = await getVideoDuration(rawFilePath);
-      console.log('Video duration:', duration);
-    } catch (error) {
-      console.error('Error getting video duration:', error);
-      duration = 120; // Default duration if cannot determine
-    }
-    
-    // Process video
-    let hlsPlaylist;
-    try {
-      const processingResult = await processVideo(rawFilePath, outputDir, filename);
-      hlsPlaylist = processingResult.hlsPlaylist;
-      console.log('Video processed successfully:', hlsPlaylist);
-    } catch (error) {
-      console.error('Error processing video:', error);
-      // Fallback: use original file
-      hlsPlaylist = `${filename}/${filename}${path.extname(videoFile.originalname)}`;
-      
-      // Create directory and copy file
-      const videoDir = path.join(outputDir, filename);
-      if (!fs.existsSync(videoDir)) {
-        fs.mkdirSync(videoDir, { recursive: true });
-      }
-      fs.copyFileSync(rawFilePath, path.join(videoDir, `${filename}${path.extname(videoFile.originalname)}`));
-    }
+    // Store video filename (relative path from uploads folder)
+    const videoFilename = `videos/${videoFile.filename}`;
     
     // Handle thumbnail
-    let thumbnail;
+    let thumbnailFilename = null;
     if (thumbnailFile) {
       // Use user-uploaded thumbnail
-      const thumbnailExt = path.extname(thumbnailFile.filename);
-      const thumbnailFilename = `${filename}${thumbnailExt}`;
-      const videoDir = path.join(outputDir, filename);
-      
-      if (!fs.existsSync(videoDir)) {
-        fs.mkdirSync(videoDir, { recursive: true });
-      }
-      
-      // Move thumbnail to video directory
-      fs.renameSync(thumbnailFile.path, path.join(videoDir, thumbnailFilename));
-      thumbnail = `${filename}/${thumbnailFilename}`;
-      console.log('Custom thumbnail saved:', thumbnail);
+      thumbnailFilename = `thumbnails/${thumbnailFile.filename}`;
+      console.log('Custom thumbnail saved:', thumbnailFilename);
     } else {
-      // Generate thumbnail from video
+      // Create a placeholder thumbnail filename (you can generate a default thumbnail later)
+      const defaultThumbnailName = `default-thumbnail-${Date.now()}.jpg`;
+      thumbnailFilename = `thumbnails/${defaultThumbnailName}`;
+      
+      // Create a placeholder thumbnail file (you can replace this with actual thumbnail generation)
+      const placeholderThumbnailPath = path.join('uploads/thumbnails', defaultThumbnailName);
       try {
-        thumbnail = await generateThumbnail(rawFilePath, outputDir, filename);
-        console.log('Thumbnail generated:', thumbnail);
+        // Create a simple placeholder file (in a real scenario, you might want to copy a default image)
+        fs.writeFileSync(placeholderThumbnailPath, 'placeholder');
+        console.log('Placeholder thumbnail created:', thumbnailFilename);
       } catch (error) {
-        console.error('Error generating thumbnail:', error);
-        // Create placeholder thumbnail
-        const videoDir = path.join(outputDir, filename);
-        if (!fs.existsSync(videoDir)) {
-          fs.mkdirSync(videoDir, { recursive: true });
-        }
-        fs.writeFileSync(path.join(videoDir, 'thumbnail.jpg'), 'placeholder');
-        thumbnail = `${filename}/thumbnail.jpg`;
+        console.error('Error creating placeholder thumbnail:', error);
+        thumbnailFilename = null;
       }
     }
     
@@ -154,12 +114,15 @@ router.post('/upload', auth, upload.fields([
       }
     }
     
+    // Set default duration (since we're not using ffmpeg to get actual duration)
+    const duration = 120; // Default duration in seconds
+    
     // Save video info to database
     db.execute(
       `INSERT INTO videos 
        (title, description, filename, thumbnail, duration, user_id, category, tags, status) 
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'published')`,
-      [title, description, hlsPlaylist, thumbnail, duration, userId, category, JSON.stringify(tagsArray)],
+      [title, description, videoFilename, thumbnailFilename, duration, userId, category, JSON.stringify(tagsArray)],
       (error, results) => {
         if (error) {
           console.error('Database error:', error);
@@ -169,7 +132,9 @@ router.post('/upload', auth, upload.fields([
         console.log('Video saved to database with ID:', results.insertId);
         res.status(201).json({
           message: 'Video uploaded successfully',
-          videoId: results.insertId
+          videoId: results.insertId,
+          videoFile: videoFilename,
+          thumbnail: thumbnailFilename
         });
       }
     );
@@ -178,7 +143,6 @@ router.post('/upload', auth, upload.fields([
     res.status(500).json({ message: 'Upload failed', error: error.message });
   }
 });
-
 
 // Get all videos - Updated query
 router.get('/', (req, res) => {
@@ -261,9 +225,6 @@ router.get('/:id', (req, res) => {
     }
   );
 });
-
-
-
 
 // Get comments for a video
 router.get('/:id/comments', (req, res) => {
@@ -427,10 +388,5 @@ router.get('/:id/like', auth, (req, res) => {
     }
   );
 });
-
-
-
-
-
 
 module.exports = router;
