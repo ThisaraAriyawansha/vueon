@@ -12,7 +12,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 font-inter">
+    <nav className="fixed top-0 left-0 right-0 z-50 mt-4 ml-6 mr-6 font-inter">
       <div className="container px-4 mx-auto">
         <div className="flex items-center justify-between py-4">
           {/* Company Logo */}
@@ -21,12 +21,15 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="items-center hidden space-x-6 md:flex bg-primary bg-opacity-30 backdrop-blur-md">
-            <Link to="/" className="text-sm text-white transition-colors hover:text-gray-300">
+          <div className="items-center hidden p-2 ml-8 space-x-6 rounded-l-full rounded-r-full md:flex bg-primary bg-opacity-30 backdrop-blur-md">
+            <Link to="/" className="ml-8 text-sm text-white transition-colors hover:text-gray-300">
               Home
             </Link>
             <Link to="/trending" className="text-sm text-white transition-colors hover:text-gray-300">
               Trending
+            </Link>
+             <Link to="/about" className="text-sm text-white transition-colors hover:text-gray-300">
+              About Us
             </Link>
             {currentUser ? (
               <div className="flex items-center space-x-4">
@@ -36,10 +39,10 @@ const Navbar = () => {
                 >
                   Upload
                 </Link>
-                <div className="relative">
+                <div className="relative ">
                   <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="flex items-center space-x-2 text-white"
+                    className="flex items-center mr-8 space-x-2 text-white"
                   >
                     <img
                       src={`http://localhost:5000/${currentUser.avatar}`}
@@ -68,20 +71,21 @@ const Navbar = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
-                <Link
-                  to="/login"
-                  className="text-sm text-white transition-colors hover:text-gray-300"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="px-4 py-2 text-sm text-white transition-colors rounded-lg hover:text-gray-300"
-                >
-                  Sign Up
-                </Link>
-              </div>
+            <div className="flex items-center">
+              <Link
+                to="/login"
+                className="mr-4 text-sm text-white transition-colors hover:text-gray-300"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="px-4 py-2 mr-6 text-sm text-white transition-colors rounded-lg hover:text-gray-300"
+              >
+                Sign Up
+              </Link>
+            </div>
+
             )}
           </div>
 
@@ -98,7 +102,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="py-4 border-t md:hidden border-secondary bg-primary bg-opacity-30 backdrop-blur-md">
+          <div className="p-4 py-4 border-t md:hidden border-secondary bg-primary bg-opacity-30 backdrop-blur-md rounded-b-2xl">
             <div className="flex flex-col space-y-4">
               <Link
                 to="/"
