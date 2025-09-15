@@ -142,7 +142,7 @@ const Profile = () => {
         <div className="flex items-center space-x-6">
           <div className="relative">
             <img 
-              src={user.avatar ? `/avatars/${user.avatar}` : '/default-avatar.png'} 
+              src={`http://localhost:5000/${user.avatar}`} 
               alt={user.username}
               className="w-24 h-24 rounded-full"
             />

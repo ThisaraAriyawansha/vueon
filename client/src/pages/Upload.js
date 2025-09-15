@@ -9,19 +9,30 @@ const Upload = () => {
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
   const [videoFile, setVideoFile] = useState(null);
+  const [thumbnailFile, setThumbnailFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleFileChange = (e) => {
+  const handleVideoChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('video/')) {
       setVideoFile(file);
       setError('');
     } else {
       setError('Please select a valid video file');
+    }
+  };
+
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setThumbnailFile(file);
+      setError('');
+    } else {
+      setError('Please select a valid image file for thumbnail');
     }
   };
 
@@ -38,6 +49,9 @@ const Upload = () => {
 
     const formData = new FormData();
     formData.append('video', videoFile);
+    if (thumbnailFile) {
+      formData.append('thumbnail', thumbnailFile);
+    }
     formData.append('title', title);
     formData.append('description', description);
     formData.append('category', category);
@@ -86,12 +100,12 @@ const Upload = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-700">
-              Video File
+              Video File *
             </label>
             <input
               type="file"
               accept="video/*"
-              onChange={handleFileChange}
+              onChange={handleVideoChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-highlight"
               required
             />
@@ -101,10 +115,35 @@ const Upload = () => {
               </p>
             )}
           </div>
+
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Thumbnail Image (Optional)
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleThumbnailChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-highlight"
+            />
+            {thumbnailFile && (
+              <div className="mt-2">
+                <p className="text-sm text-gray-500">Selected: {thumbnailFile.name}</p>
+                <img 
+                  src={URL.createObjectURL(thumbnailFile)} 
+                  alt="Thumbnail preview" 
+                  className="mt-2 rounded-md max-h-48"
+                />
+              </div>
+            )}
+            <p className="mt-1 text-xs text-gray-500">
+              If no thumbnail is provided, one will be generated from your video.
+            </p>
+          </div>
           
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-700">
-              Title
+              Title *
             </label>
             <input
               type="text"

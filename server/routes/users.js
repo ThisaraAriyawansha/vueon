@@ -176,4 +176,105 @@ router.put('/:id', auth, upload.single('avatar'), async (req, res) => {
   }
 });
 
+
+// Subscribe to a channel
+router.post('/subscribe/:channelId', auth, (req, res) => {
+  const channelId = req.params.channelId;
+  const subscriberId = req.user.id;
+
+  if (parseInt(channelId) === subscriberId) {
+    return res.status(400).json({ message: 'Cannot subscribe to your own channel' });
+  }
+
+  // Check if already subscribed
+  db.execute(
+    'SELECT id FROM subscriptions WHERE subscriber_id = ? AND channel_id = ?',
+    [subscriberId, channelId],
+    (error, results) => {
+      if (error) {
+        console.error('Database error:', error);
+        return res.status(500).json({ message: 'Database error' });
+      }
+
+      if (results.length > 0) {
+        return res.status(400).json({ message: 'Already subscribed to this channel' });
+      }
+
+      // Add subscription
+      db.execute(
+        'INSERT INTO subscriptions (subscriber_id, channel_id) VALUES (?, ?)',
+        [subscriberId, channelId],
+        (error) => {
+          if (error) {
+            console.error('Database error:', error);
+            return res.status(500).json({ message: 'Failed to subscribe' });
+          }
+
+          res.json({ message: 'Subscribed successfully' });
+        }
+      );
+    }
+  );
+});
+
+// Unsubscribe from a channel
+router.delete('/subscribe/:channelId', auth, (req, res) => {
+  const channelId = req.params.channelId;
+  const subscriberId = req.user.id;
+
+  db.execute(
+    'DELETE FROM subscriptions WHERE subscriber_id = ? AND channel_id = ?',
+    [subscriberId, channelId],
+    (error, results) => {
+      if (error) {
+        console.error('Database error:', error);
+        return res.status(500).json({ message: 'Database error' });
+      }
+
+      if (results.affectedRows === 0) {
+        return res.status(400).json({ message: 'Not subscribed to this channel' });
+      }
+
+      res.json({ message: 'Unsubscribed successfully' });
+    }
+  );
+});
+
+// Check if user is subscribed to a channel
+router.get('/subscribe/:channelId', auth, (req, res) => {
+  const channelId = req.params.channelId;
+  const subscriberId = req.user.id;
+
+  db.execute(
+    'SELECT id FROM subscriptions WHERE subscriber_id = ? AND channel_id = ?',
+    [subscriberId, channelId],
+    (error, results) => {
+      if (error) {
+        console.error('Database error:', error);
+        return res.status(500).json({ message: 'Database error' });
+      }
+
+      res.json({ subscribed: results.length > 0 });
+    }
+  );
+});
+
+// Get subscriber count for a channel
+router.get('/channel/:channelId/subscribers', (req, res) => {
+  const channelId = req.params.channelId;
+
+  db.execute(
+    'SELECT COUNT(*) as count FROM subscriptions WHERE channel_id = ?',
+    [channelId],
+    (error, results) => {
+      if (error) {
+        console.error('Database error:', error);
+        return res.status(500).json({ message: 'Database error' });
+      }
+
+      res.json({ count: results[0].count });
+    }
+  );
+});
+
 module.exports = router;
