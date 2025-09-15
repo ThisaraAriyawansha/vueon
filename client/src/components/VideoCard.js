@@ -108,6 +108,7 @@ const VideoCard = ({ video }) => {
         
         <div className="flex items-center justify-between mt-2 text-sm text-gray-500">
           <span>{formatViews(video.views)}</span>
+          <span>{video.like_count} likes</span> {/* Add this line */}
           <span>{video.created_at ? new Date(video.created_at).toLocaleDateString() : 'Unknown date'}</span>
         </div>
       </div>

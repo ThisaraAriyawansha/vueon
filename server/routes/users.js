@@ -277,4 +277,47 @@ router.get('/channel/:channelId/subscribers', (req, res) => {
   );
 });
 
+
+// In your backend routes (users.js)
+
+// Get user's liked videos
+router.get('/:id/liked-videos', auth, (req, res) => {
+  const userId = req.params.id;
+  
+  db.execute(
+    `SELECT v.*, u.username, u.avatar 
+     FROM videos v 
+     JOIN users u ON v.user_id = u.id 
+     JOIN likes l ON v.id = l.video_id
+     WHERE l.user_id = ? AND v.status = 'published'
+     ORDER BY l.created_at DESC`,
+    [userId],
+    (error, results) => {
+      if (error) {
+        console.error('Database error:', error);
+        return res.status(500).json({ message: 'Database error' });
+      }
+      
+      res.json(results);
+    }
+  );
+});
+
+// Get user's subscriber count
+router.get('/:id/subscribers/count', (req, res) => {
+  const userId = req.params.id;
+  
+  db.execute(
+    'SELECT COUNT(*) as count FROM subscriptions WHERE channel_id = ?',
+    [userId],
+    (error, results) => {
+      if (error) {
+        console.error('Database error:', error);
+        return res.status(500).json({ message: 'Database error' });
+      }
+      
+      res.json({ count: results[0].count });
+    }
+  );
+});
 module.exports = router;
