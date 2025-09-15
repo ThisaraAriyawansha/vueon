@@ -22,6 +22,12 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="items-center hidden p-2 ml-8 space-x-6 rounded-l-full rounded-r-full md:flex bg-primary bg-opacity-30 backdrop-blur-md">
+            <Link to="/" className="ml-auto mr-8">
+              <div className="flex items-center justify-center rounded-full shadow-md">
+                <img src="/logo2.png" alt="Vueon Logo" className="object-contain w-8 h-8" />
+              </div>
+            </Link>
+
             <Link to="/" className="ml-8 text-sm text-white transition-colors hover:text-gray-300">
               Home
             </Link>
