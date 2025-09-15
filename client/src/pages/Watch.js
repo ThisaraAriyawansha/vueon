@@ -505,7 +505,7 @@ const Watch = () => {
 
   if (loading) {
     return (
-      <div className="container px-4 py-8 mx-auto">
+      <div className="container px-4 py-8 mx-auto mt-24">
         <div className="flex justify-center">
           <div className="w-12 h-12 border-b-2 rounded-full animate-spin border-highlight"></div>
         </div>
@@ -515,7 +515,7 @@ const Watch = () => {
 
   if (error && !video) {
     return (
-      <div className="container px-4 py-8 mx-auto">
+      <div className="container px-4 py-8 mx-auto mt-24">
         <div className="max-w-md mx-auto text-center">
           <div className="p-6 text-red-700 bg-red-100 rounded-lg">
             <h2 className="mb-2 text-lg font-semibold">Unable to Load Video</h2>
@@ -533,7 +533,7 @@ const Watch = () => {
   }
 
   return (
-    <div className="container px-4 py-8 mx-auto">
+    <div className="container px-4 py-8 mx-auto mt-24">
       {error && (
         <div className="p-4 mb-6 text-red-700 bg-red-100 rounded-lg">
           {error}

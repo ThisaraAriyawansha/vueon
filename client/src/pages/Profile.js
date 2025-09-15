@@ -227,7 +227,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen mt-24 bg-gray-50">
       <div className="container max-w-6xl px-4 py-6 mx-auto">
         {/* Profile Header */}
         <div className="p-6 mb-6 bg-white shadow-sm rounded-xl">

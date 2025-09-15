@@ -42,7 +42,7 @@ const Trending = () => {
   }
 
   return (
-    <div className="container px-4 py-8 mx-auto">
+    <div className="container px-4 py-8 mx-auto mt-24">
       <h1 className="mb-8 text-3xl font-bold text-primary">Trending Videos</h1>
       
       {videos.length === 0 ? (

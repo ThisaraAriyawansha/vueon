@@ -87,7 +87,7 @@ const Upload = () => {
   }
 
   return (
-    <div className="container px-4 py-8 mx-auto">
+    <div className="container px-4 py-8 mx-auto mt-24">
       <div className="max-w-2xl p-6 mx-auto bg-white rounded-lg shadow-md">
         <h1 className="mb-6 text-3xl font-bold text-primary">Upload Video</h1>
         

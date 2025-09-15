@@ -12,54 +12,54 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="text-white shadow-lg bg-primary">
+    <nav className="fixed top-0 left-0 right-0 z-50 font-inter">
       <div className="container px-4 mx-auto">
         <div className="flex items-center justify-between py-4">
-          <Link to="/" className="text-2xl font-bold text-light">
+          {/* Company Logo */}
+          <Link to="/" className="text-2xl font-bold text-white font-orbitron">
             Vueon
           </Link>
 
-          <div className="items-center hidden space-x-6 md:flex">
-            <Link to="/" className="transition-colors hover:text-highlight">
+          {/* Desktop Menu */}
+          <div className="items-center hidden space-x-6 md:flex bg-primary bg-opacity-30 backdrop-blur-md">
+            <Link to="/" className="text-sm text-white transition-colors hover:text-gray-300">
               Home
             </Link>
-            <Link to="/trending" className="transition-colors hover:text-highlight">
+            <Link to="/trending" className="text-sm text-white transition-colors hover:text-gray-300">
               Trending
             </Link>
-            
             {currentUser ? (
               <div className="flex items-center space-x-4">
-                <Link 
-                  to="/upload" 
-                  className="px-4 py-2 transition-colors rounded bg-accent hover:bg-highlight"
+                <Link
+                  to="/upload"
+                  className="px-4 py-2 text-sm text-white transition-colors rounded-lg hover:text-gray-300"
                 >
                   Upload
                 </Link>
                 <div className="relative">
-                  <button 
+                  <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-2 text-white"
                   >
-                    <img 
-                      src={`http://localhost:5000/${currentUser.avatar}`} 
+                    <img
+                      src={`http://localhost:5000/${currentUser.avatar}`}
                       alt={currentUser.username}
                       className="w-8 h-8 rounded-full"
                     />
-                    <span>{currentUser.username}</span>
+                    <span className="text-sm">{currentUser.username}</span>
                   </button>
-                  
                   {isMenuOpen && (
-                    <div className="absolute right-0 z-50 w-48 py-2 mt-2 bg-white rounded shadow-lg text-primary">
-                      <Link 
+                    <div className="absolute right-0 z-50 w-48 py-2 mt-2 rounded shadow-lg bg-primary bg-opacity-30 backdrop-blur-md text-primary">
+                      <Link
                         to={`/profile/${currentUser.id}`}
-                        className="block px-4 py-2 hover:bg-light"
+                        className="block px-4 py-2 text-sm text-white hover:bg-gray-500"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         Profile
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="block w-full px-4 py-2 text-left hover:bg-light"
+                        className="block w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-500"
                       >
                         Logout
                       </button>
@@ -69,15 +69,15 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link 
-                  to="/login" 
-                  className="transition-colors hover:text-highlight"
+                <Link
+                  to="/login"
+                  className="text-sm text-white transition-colors hover:text-gray-300"
                 >
                   Login
                 </Link>
-                <Link 
-                  to="/register" 
-                  className="px-4 py-2 transition-colors rounded bg-accent hover:bg-highlight"
+                <Link
+                  to="/register"
+                  className="px-4 py-2 text-sm text-white transition-colors rounded-lg hover:text-gray-300"
                 >
                   Sign Up
                 </Link>
@@ -85,9 +85,9 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <button 
-            className="md:hidden"
+          {/* Mobile Menu Button */}
+          <button
+            className="text-white md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,35 +96,61 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="py-4 border-t md:hidden border-secondary">
+          <div className="py-4 border-t md:hidden border-secondary bg-primary bg-opacity-30 backdrop-blur-md">
             <div className="flex flex-col space-y-4">
-              <Link to="/" className="transition-colors hover:text-highlight">
+              <Link
+                to="/"
+                className="text-sm text-white transition-colors hover:text-gray-300"
+                onClick={() => setIsMenuOpen(false)}
+              >
                 Home
               </Link>
-              <Link to="/trending" className="transition-colors hover:text-highlight">
+              <Link
+                to="/trending"
+                className="text-sm text-white transition-colors hover:text-gray-300"
+                onClick={() => setIsMenuOpen(false)}
+              >
                 Trending
               </Link>
-              
               {currentUser ? (
                 <>
-                  <Link to="/upload" className="transition-colors hover:text-highlight">
+                  <Link
+                    to="/upload"
+                    className="text-sm text-white transition-colors hover:text-gray-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
                     Upload
                   </Link>
-                  <Link to={`/profile/${currentUser.id}`} className="transition-colors hover:text-highlight">
+                  <Link
+                    to={`/profile/${currentUser.id}`}
+                    className="text-sm text-white transition-colors hover:text-gray-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
                     Profile
                   </Link>
-                  <button onClick={handleLogout} className="text-left transition-colors hover:text-highlight">
+                  <button
+                    onClick={handleLogout}
+                    className="text-sm text-left text-white transition-colors hover:text-gray-300"
+                  >
                     Logout
                   </button>
                 </>
               ) : (
                 <>
-                  <Link to="/login" className="transition-colors hover:text-highlight">
+                  <Link
+                    to="/login"
+                    className="text-sm text-white transition-colors hover:text-gray-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
                     Login
                   </Link>
-                  <Link to="/register" className="transition-colors hover:text-highlight">
+                  <Link
+                    to="/register"
+                    className="text-sm text-white transition-colors hover:text-gray-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
                     Sign Up
                   </Link>
                 </>

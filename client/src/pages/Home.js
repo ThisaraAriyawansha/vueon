@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import VideoCard from '../components/VideoCard';
+import HeroSection from '../components/HeroSection';
+
+
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
@@ -42,6 +45,8 @@ const Home = () => {
   }
 
   return (
+    <div>
+      <HeroSection/>
     <div className="container px-4 py-8 mx-auto">
       <h1 className="mb-8 text-3xl font-bold text-primary">Latest Videos</h1>
       
@@ -56,6 +61,7 @@ const Home = () => {
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 };
