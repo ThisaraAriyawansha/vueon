@@ -24,7 +24,7 @@ const Navbar = () => {
       const scrollPercent = (scrollTop / documentHeight) * 100;
       
       // Hide logo when scrolled 30% or more
-      setScrolled(scrollPercent >= 30);
+      setScrolled(scrollPercent >= 50);
     };
 
     // Set initial values
@@ -67,11 +67,13 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <div className={`items-center hidden rounded-l-full rounded-r-full md:flex bg-primary bg-opacity-30 backdrop-blur-md transition-all duration-500 ease-in-out ${
-            shouldHideLogo 
-              ? 'w-full justify-between px-8 py-2' 
-              : 'ml-8 p-2 space-x-6'
-          }`}>
+                <div className={`items-center hidden rounded-l-full rounded-r-full md:flex
+                  backdrop-blur-md transition-all duration-500 ease-in-out
+                  ${shouldHideLogo 
+                    ? 'w-full justify-between px-8 py-2 bg-primary bg-opacity-50' 
+                    : 'ml-8 p-2 space-x-6 bg-white bg-opacity-20'
+                  }`}
+                >
             
             {/* Company Logo Image - positioned on the left when text logo is hidden */}
             <Link to="/" className={`${shouldHideLogo ? 'transform scale-105' : 'ml-auto mr-8'} transition-all duration-500 ease-in-out`}>
