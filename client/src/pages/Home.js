@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import axios from 'axios';
 import VideoCard from '../components/VideoCard';
 import HeroSection from '../components/HeroSection';
 import VideoSection from './HomeComponent/VideoSection';
+import LogoSection from './HomeComponent/LogoSection';
+
 
 import { Play, Upload, Users, TrendingUp, Star, Shield, Zap, Globe, Award, ArrowRight, CheckCircle, BarChart3, Heart, Eye } from 'lucide-react';
 
@@ -89,6 +92,7 @@ const Home = () => {
     <div className="bg-white">
       {/* Hero Section */}
       <HeroSection />
+      <LogoSection/>
 
       {/* Stats Section */}
       <section className="py-20 bg-gradient-to-b from-white to-gray-50">
@@ -125,10 +129,12 @@ const Home = () => {
           </div>
           
           <div className="text-center">
-            <button className="inline-flex items-center px-8 py-3 bg-[#192f4a] text-white rounded-full hover:bg-[#003366] transition-all duration-300 group">
-              <span>Explore All Videos</span>
-              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-            </button>
+            <Link to="/trending">
+              <button className="inline-flex items-center px-8 py-3 bg-[#192f4a] text-white rounded-full hover:bg-[#003366] transition-all duration-300 group">
+                <span>Explore All Videos</span>
+                <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              </button>
+            </Link>
           </div>
         </div>
       </section>

@@ -32,7 +32,7 @@ const PearlStaySection = () => {
   }, []);
 
   return (
-    <div className="py-4 bg-white ">
+    <div className="">
       {/* Video Background Section */}
       <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px] flex items-center justify-center text-center text-white overflow-hidden  shadow-lg">
         {/* Video Background */}
