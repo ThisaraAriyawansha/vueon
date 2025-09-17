@@ -13,22 +13,23 @@ const HeroSection = () => {
         <div className="grid items-center min-h-screen gap-12 lg:grid-cols-2">
           
           {/* Left content */}
-          <div className="ml-8 space-y-8 text-white">
+          <div className="mt-16 ml-8 space-y-8 text-white md:mt-0">
             <div className="space-y-2">
-              <p className="text-sm font-medium tracking-wide uppercase text-cyan-400">
-              THE ULTIMATE PLATFORM
+              <p className="text-xs font-medium tracking-wide uppercase text-cyan-400">
+                THE ULTIMATE PLATFORM
               </p>
-              <h1 className="text-5xl font-bold leading-tight lg:text-7xl">
+              <h1 className="text-3xl font-bold leading-snug lg:text-5xl">
                 UPLOAD & STREAM
                 <span className="block text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text">
                   Vueon
                 </span>
               </h1>
             </div>
-            
-            <p className="max-w-lg text-xl leading-relaxed text-gray-300">
+
+            <p className="max-w-md text-base leading-relaxed text-gray-300">
               Upload, share, and stream your videos seamlessly with Vueon, the ultimate platform for creators and viewers.
             </p>
+
             
             <div className="flex flex-wrap gap-4">
             <button className="flex items-center justify-center px-4 py-2 space-x-2 text-sm font-medium text-white transition-all duration-300 transform border border-white rounded-full shadow-md bg-primary bg-opacity-90 backdrop-blur-md hover:scale-105">

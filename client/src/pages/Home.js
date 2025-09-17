@@ -2,11 +2,47 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import VideoCard from '../components/VideoCard';
 import HeroSection from '../components/HeroSection';
+import { Play, Upload, Users, TrendingUp, Star, Shield, Zap, Globe, Award, ArrowRight, CheckCircle, BarChart3, Heart, Eye } from 'lucide-react';
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const testimonials = [
+    { name: "Sarah Chen", role: "Content Creator", text: "Vueon has transformed how I share my creative work. The platform is intuitive and powerful.", avatar: "SC" },
+    { name: "Marcus Johnson", role: "Filmmaker", text: "The streaming quality and creator tools on Vueon are unmatched. It's become my go-to platform.", avatar: "MJ" },
+    { name: "Elena Rodriguez", role: "Educator", text: "Perfect for sharing educational content. My students love the seamless viewing experience.", avatar: "ER" }
+  ];
+
+  const stats = [
+    { number: "1M+", label: "Active Creators", icon: Users },
+    { number: "50M+", label: "Monthly Views", icon: Eye },
+    { number: "99.9%", label: "Uptime", icon: Shield },
+    { number: "150+", label: "Countries", icon: Globe }
+  ];
+
+  const features = [
+    {
+      icon: Upload,
+      title: "Instant Upload",
+      description: "Drag, drop, and publish your videos in seconds with our advanced compression technology.",
+      color: "from-[#005691] to-[#0077b6]"
+    },
+    {
+      icon: Zap,
+      title: "Lightning Fast",
+      description: "Global CDN ensures your content loads instantly anywhere in the world.",
+      color: "from-[#0077b6] to-[#add8e6]"
+    },
+    {
+      icon: BarChart3,
+      title: "Advanced Analytics",
+      description: "Deep insights into your audience engagement and content performance.",
+      color: "from-[#003366] to-[#005691]"
+    }
+  ];
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -22,6 +58,11 @@ const Home = () => {
     };
 
     fetchVideos();
+
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -43,57 +84,216 @@ const Home = () => {
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-white">
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Latest Videos Section */}
-      <div className="container px-4 py-16 mx-auto">
-        <h1 className="mb-8 text-4xl font-bold text-[#003366] text-center md:text-left">Latest Videos</h1>
-        {videos.length === 0 ? (
-          <div className="text-center text-gray-500">No videos found. Be the first to upload!</div>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {/* Stats Section */}
+      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+        <div className="container px-6 mx-auto">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center group">
+                <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                  <stat.icon className="text-white w-7 h-7" />
+                </div>
+                <div className="text-3xl font-light text-[#192f4a] mb-2">{stat.number}</div>
+                <div className="text-sm text-[#005691] font-medium">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Content Section */}
+      <section className="py-20 bg-white">
+        <div className="container px-6 mx-auto">
+          <div className="mb-16 text-center">
+            <h2 className="text-4xl font-light text-[#192f4a] mb-4">Trending Now</h2>
+            <p className="text-[#005691] text-lg max-w-2xl mx-auto">Discover the most engaging content from our creative community</p>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-6 mb-12 md:grid-cols-2 lg:grid-cols-4">
             {videos.map((video) => (
               <VideoCard key={video.id} video={video} />
             ))}
           </div>
-        )}
-      </div>
+          
+          <div className="text-center">
+            <button className="inline-flex items-center px-8 py-3 bg-[#192f4a] text-white rounded-full hover:bg-[#003366] transition-all duration-300 group">
+              <span>Explore All Videos</span>
+              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
+        </div>
+      </section>
 
-      {/* Features Section */}
-      <div className="bg-[#003366] text-white py-16">
-        <div className="container px-4 mx-auto">
-          <h2 className="mb-12 text-3xl font-bold text-center md:text-4xl">Why Choose Vueon?</h2>
+      {/* Features Showcase */}
+      <section className="py-20 bg-gray-50">
+        <div className="container px-6 mx-auto">
+          <div className="mb-16 text-center">
+            <h2 className="text-4xl font-light text-[#192f4a] mb-4">Built for Creators</h2>
+            <p className="text-[#005691] text-lg">Professional tools that scale with your ambitions</p>
+          </div>
+          
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="text-center p-6 bg-[#005691] rounded-lg transition-transform duration-300 hover:scale-105">
-              <h3 className="mb-2 text-xl font-semibold">Seamless Streaming</h3>
-              <p className="text-[#add8e6]">Stream high-quality videos with minimal buffering and maximum performance.</p>
+            {features.map((feature, index) => (
+              <div key={index} className="p-8 transition-all duration-500 bg-white shadow-sm rounded-3xl hover:shadow-xl group">
+                <div className={`inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br ${feature.color} rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className="text-white w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-semibold text-[#192f4a] mb-4">{feature.title}</h3>
+                <p className="text-[#005691] leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Creator Spotlight */}
+      <section className="py-20 bg-gradient-to-br from-[#192f4a] to-[#003366] text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
+            <div>
+              <h2 className="mb-6 text-4xl font-light">Join the Creator Economy</h2>
+              <p className="text-xl text-[#add8e6] mb-8 leading-relaxed">
+                Turn your passion into profit with our comprehensive creator program, offering revenue sharing, 
+                brand partnerships, and growth tools.
+              </p>
+              <div className="mb-8 space-y-4">
+                {["Monetization tools", "Brand collaboration platform", "Detailed analytics", "Community support"].map((item, index) => (
+                  <div key={index} className="flex items-center space-x-3">
+                    <CheckCircle className="w-5 h-5 text-[#add8e6]" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+              <button className="px-8 py-3 bg-white text-[#192f4a] rounded-full hover:bg-[#add8e6] transition-all duration-300 font-semibold">
+                Become a Creator
+              </button>
             </div>
-            <div className="text-center p-6 bg-[#005691] rounded-lg transition-transform duration-300 hover:scale-105">
-              <h3 className="mb-2 text-xl font-semibold">Easy Sharing</h3>
-              <p className="text-[#add8e6]">Share your videos with the world in just a few clicks.</p>
-            </div>
-            <div className="text-center p-6 bg-[#005691] rounded-lg transition-transform duration-300 hover:scale-105">
-              <h3 className="mb-2 text-xl font-semibold">Creator Tools</h3>
-              <p className="text-[#add8e6]">Powerful editing and analytics tools to grow your audience.</p>
+            <div className="relative">
+              <div className="p-8 bg-white/10 backdrop-blur-sm rounded-3xl">
+                <div className="aspect-video bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-2xl mb-6 flex items-center justify-center">
+                  <Play className="w-16 h-16 text-white/80" />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-[#add8e6] rounded-full flex items-center justify-center text-[#192f4a] font-semibold text-sm">
+                      SC
+                    </div>
+                    <div>
+                      <div className="font-semibold">Sarah's Creative Studio</div>
+                      <div className="text-sm text-[#add8e6]">2.4M subscribers</div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-[#add8e6]">Latest: "Design Masterclass Series"</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 bg-white">
+        <div className="container px-6 mx-auto">
+          <div className="mb-16 text-center">
+            <h2 className="text-4xl font-light text-[#192f4a] mb-4">Loved by Creators</h2>
+            <p className="text-[#005691] text-lg">See what our community has to say</p>
+          </div>
+          
+          <div className="max-w-4xl mx-auto">
+            <div className="relative p-12 overflow-hidden text-center bg-gray-50 rounded-3xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#add8e6]/10 to-[#005691]/10"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-full mx-auto mb-6 flex items-center justify-center text-white font-bold text-lg">
+                  {testimonials[currentTestimonial].avatar}
+                </div>
+                <blockquote className="text-xl text-[#192f4a] mb-6 italic">
+                  "{testimonials[currentTestimonial].text}"
+                </blockquote>
+                <div className="font-semibold text-[#192f4a]">{testimonials[currentTestimonial].name}</div>
+                <div className="text-[#005691]">{testimonials[currentTestimonial].role}</div>
+              </div>
+            </div>
+            
+            <div className="flex justify-center mt-8 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentTestimonial ? 'bg-[#005691]' : 'bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Platform Benefits */}
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+        <div className="container px-6 mx-auto">
+          <div className="mb-16 text-center">
+            <h2 className="text-4xl font-light text-[#192f4a] mb-4">Why Choose Vueon?</h2>
+            <p className="text-[#005691] text-lg max-w-2xl mx-auto">Experience the difference with our cutting-edge platform</p>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="p-8 text-center transition-all duration-300 bg-white shadow-sm rounded-3xl hover:shadow-lg">
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-2xl">
+                <Shield className="text-white w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#192f4a] mb-4">Secure & Reliable</h3>
+              <p className="text-[#005691]">Enterprise-grade security with 99.9% uptime guarantee for your content.</p>
+            </div>
+            
+            <div className="p-8 text-center transition-all duration-300 bg-white shadow-sm rounded-3xl hover:shadow-lg">
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-[#0077b6] to-[#add8e6] rounded-2xl">
+                <TrendingUp className="text-white w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#192f4a] mb-4">Growth Focused</h3>
+              <p className="text-[#005691]">AI-powered recommendations and analytics to help you reach more viewers.</p>
+            </div>
+            
+            <div className="p-8 text-center transition-all duration-300 bg-white shadow-sm rounded-3xl hover:shadow-lg">
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-[#003366] to-[#005691] rounded-2xl">
+                <Heart className="text-white w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#192f4a] mb-4">Community First</h3>
+              <p className="text-[#005691]">Build meaningful connections with viewers and fellow creators.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Call-to-Action Section */}
-      <div className="bg-gradient-to-b from-[#005691] to-[#0077b6] text-white py-16 text-center">
-        <div className="container px-4 mx-auto">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Ready to Share Your Story?</h2>
-          <p className="text-lg mb-8 text-[#add8e6] max-w-2xl mx-auto">
-            Join Vueon today and start uploading your videos to inspire, entertain, and connect.
+      <section className="py-20 bg-gradient-to-br from-[#005691] to-[#0077b6] text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="container relative z-10 px-6 mx-auto text-center">
+          <h2 className="mb-6 text-4xl font-light md:text-5xl">Ready to Share Your Story?</h2>
+          <p className="text-xl text-[#add8e6] mb-10 max-w-2xl mx-auto leading-relaxed">
+            Join millions of creators who trust Vueon to bring their vision to life. 
+            Start your journey today.
           </p>
-          <button className="bg-white text-[#003366] px-8 py-3 rounded-full text-lg font-semibold hover:bg-[#add8e6] transition-all duration-300">
-            Get Started
-          </button>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <button className="px-8 py-4 bg-white text-[#192f4a] rounded-full text-lg font-semibold hover:bg-[#add8e6] transition-all duration-300 inline-flex items-center justify-center group">
+              <span>Start Creating</span>
+              <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
+            </button>
+            <button className="px-8 py-4 border-2 border-white text-white rounded-full text-lg font-semibold hover:bg-white hover:text-[#192f4a] transition-all duration-300">
+              Watch Demo
+            </button>
+          </div>
         </div>
-      </div>
+        
+        {/* Decorative elements */}
+        <div className="absolute rounded-full w-96 h-96 -top-48 -left-48 bg-white/5 blur-3xl"></div>
+        <div className="absolute rounded-full w-96 h-96 -bottom-48 -right-48 bg-white/5 blur-3xl"></div>
+      </section>
     </div>
   );
 };

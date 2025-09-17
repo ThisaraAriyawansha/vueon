@@ -24,7 +24,7 @@ const Navbar = () => {
       const scrollPercent = (scrollTop / documentHeight) * 100;
       
       // Hide logo when scrolled 30% or more
-      setScrolled(scrollPercent >= 50);
+      setScrolled(scrollPercent >= 10);
     };
 
     // Set initial values
