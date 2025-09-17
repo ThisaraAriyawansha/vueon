@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import VideoCard from '../components/VideoCard';
 import HeroSection from '../components/HeroSection';
+import VideoSection from './HomeComponent/VideoSection';
+
 import { Play, Upload, Users, TrendingUp, Star, Shield, Zap, Globe, Award, ArrowRight, CheckCircle, BarChart3, Heart, Eye } from 'lucide-react';
 
 const Home = () => {
@@ -104,6 +106,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <VideoSection/>
+
 
       {/* Featured Content Section */}
       <section className="py-20 bg-white">
