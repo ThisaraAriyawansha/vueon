@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Upload, Users, Sparkles, Globe, Heart, ArrowRight, Cpu, Code, Eye, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Music, Headphones, Radio, Mic, Volume2 } from 'lucide-react';
+
 
 // Animation variants
 const fadeIn = {
@@ -269,114 +271,193 @@ const AboutUs = () => {
         </div>
       </section>
 
-      <section className="relative py-16 bg-white md:py-32">
-        <div className="container px-4 mx-auto sm:px-6">
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeIn}
-            className="mx-auto max-w-7xl bg-gradient-to-br from-[#192f4a] via-[#003366] to-[#005691] rounded-3xl"
-          >
-            <div className="p-8 border shadow-2xl sm:p-12 md:p-16 backdrop-blur-xl bg-white/5 border-white/10 rounded-3xl">
-              <div className="grid items-center gap-10 lg:gap-20 lg:grid-cols-2">
-                <motion.div variants={slideUp}>
-                  <h2 className="mb-6 text-3xl leading-tight text-white sm:text-4xl md:text-5xl lg:text-6xl font-ultralight">
-                    Our <span className="font-medium text-[#add8e6]">Mission</span>
-                  </h2>
-                  <div className="space-y-4 text-base font-light leading-relaxed sm:text-lg text-white/80">
-                    <p>
-                      We're engineering the future of human creativity. Through advanced AI, 
-                      quantum-fast processing, and intuitive design, we're building more than 
-                      a platform—we're architecting a new creative ecosystem.
-                    </p>
-                    <p>
-                      Every line of code, every pixel, every interaction is crafted to amplify 
-                      human potential. This is creativity, reimagined for the digital age.
-                    </p>
-                  </div>
-                  
-                  {/* Tech Highlights */}
-                  <div className="grid grid-cols-1 gap-4 mt-8 sm:grid-cols-2 sm:gap-6 sm:mt-12">
-                    <motion.div 
-                      className="flex items-center space-x-3"
-                      whileHover={{ x: 5 }}
-                    >
-                      <div className="w-2 h-2 bg-[#add8e6] rounded-full animate-pulse"></div>
-                      <span className="text-xs font-medium sm:text-sm text-white/70">Neural Networks</span>
-                    </motion.div>
-                    <motion.div 
-                      className="flex items-center space-x-3"
-                      whileHover={{ x: 5 }}
-                    >
-                      <div className="w-2 h-2 bg-[#0077b6] rounded-full animate-pulse"></div>
-                      <span className="text-xs font-medium sm:text-sm text-white/70">Edge Computing</span>
-                    </motion.div>
-                    <motion.div 
-                      className="flex items-center space-x-3"
-                      whileHover={{ x: 5 }}
-                    >
-                      <div className="w-2 h-2 bg-[#005691] rounded-full animate-pulse"></div>
-                      <span className="text-xs font-medium sm:text-sm text-white/70">Blockchain Security</span>
-                    </motion.div>
-                    <motion.div 
-                      className="flex items-center space-x-3"
-                      whileHover={{ x: 5 }}
-                    >
-                      <div className="w-2 h-2 bg-[#16599c] rounded-full animate-pulse"></div>
-                      <span className="text-xs font-medium sm:text-sm text-white/70">Quantum Encryption</span>
-                    </motion.div>
-                  </div>
-                </motion.div>
+         <section className="relative py-16 bg-white md:py-32">
+      <div className="container px-4 mx-auto sm:px-6">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeIn}
+          className="mx-auto max-w-7xl bg-gradient-to-br from-[#192f4a] via-[#003366] to-[#005691] rounded-3xl"
+        >
+          <div className="p-8 border shadow-2xl sm:p-12 md:p-16 backdrop-blur-xl bg-white/5 border-white/10 rounded-3xl">
+            <div className="grid items-center gap-10 lg:gap-20 lg:grid-cols-2">
+              <motion.div variants={slideUp}>
+                <h2 className="mb-6 text-3xl leading-tight text-white sm:text-4xl md:text-5xl lg:text-6xl font-ultralight">
+                  Our <span className="font-medium text-[#add8e6]">Mission</span>
+                </h2>
+                <div className="space-y-4 text-base font-light leading-relaxed sm:text-lg text-white/80">
+                  <p>
+                    We're revolutionizing the music and entertainment experience. Through immersive 
+                    audio technology, seamless streaming, and intuitive design, we're creating more than 
+                    a platform—we're crafting the soundtrack to your life.
+                  </p>
+                  <p>
+                    Every beat, every melody, every moment is designed to connect artists with audiences 
+                    in ways never before possible. This is entertainment, reimagined for the digital symphony.
+                  </p>
+                </div>
                 
-                {/* 3D Tech Visualization */}
-                <motion.div 
-                  className="relative"
-                  variants={slideUp}
-                >
-                  <div className="aspect-square bg-gradient-to-br from-[#003366]/30 to-[#0077b6]/30 rounded-3xl border border-white/10 backdrop-blur-sm p-6 sm:p-8 md:p-12 flex items-center justify-center">
-                    <div className="relative w-full h-full">
-                      {/* Central Core */}
-                      <motion.div 
-                        className="absolute inset-1/2 w-12 sm:w-14 md:w-16 h-12 sm:h-14 md:h-16 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-[#add8e6] to-[#0077b6] rounded-full shadow-2xl shadow-[#0077b6]/50"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                      ></motion.div>
-                      
-                      {/* Orbiting Elements */}
-                      <motion.div 
-                        className="absolute inset-0"
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                      >
-                        <Brain className="absolute top-2 sm:top-3 md:top-4 left-1/2 -translate-x-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#089fd1]" />
-                        <Code className="absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#0899e7]" />
-                        <Cpu className="absolute bottom-2 sm:bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#4787b1]" />
-                        <Eye className="absolute left-2 sm:left-3 md:left-4 top-1/2 -translate-y-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#2471be]" />
-                      </motion.div>
-                      
-                      {/* Connection Lines */}
-                      <svg className="absolute inset-0 w-full h-full">
-                        <defs>
-                          <linearGradient id="line-gradient">
-                            <stop offset="0%" stopColor="#add8e6" stopOpacity="0.3"/>
-                            <stop offset="100%" stopColor="#0077b6" stopOpacity="0.8"/>
-                          </linearGradient>
-                        </defs>
-                        <path d="M50% 50% L80% 20% M50% 50% L80% 80% M50% 50% L20% 80% M50% 50% L20% 20%" 
-                              stroke="url(#line-gradient)" 
-                              strokeWidth="2" 
-                              fill="none"
-                              className="animate-pulse" />
-                      </svg>
+                {/* Entertainment Features */}
+                <div className="grid grid-cols-1 gap-4 mt-8 sm:grid-cols-2 sm:gap-6 sm:mt-12">
+                  <motion.div 
+                    className="flex items-center space-x-3"
+                    whileHover={{ x: 5 }}
+                  >
+                    <div className="w-2 h-2 bg-[#add8e6] rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium sm:text-sm text-white/70">Hi-Fi Audio</span>
+                  </motion.div>
+                  <motion.div 
+                    className="flex items-center space-x-3"
+                    whileHover={{ x: 5 }}
+                  >
+                    <div className="w-2 h-2 bg-[#0077b6] rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium sm:text-sm text-white/70">Live Streaming</span>
+                  </motion.div>
+                  <motion.div 
+                    className="flex items-center space-x-3"
+                    whileHover={{ x: 5 }}
+                  >
+                    <div className="w-2 h-2 bg-[#005691] rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium sm:text-sm text-white/70">Smart Playlists</span>
+                  </motion.div>
+                  <motion.div 
+                    className="flex items-center space-x-3"
+                    whileHover={{ x: 5 }}
+                  >
+                    <div className="w-2 h-2 bg-[#16599c] rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium sm:text-sm text-white/70">Social Discovery</span>
+                  </motion.div>
+                </div>
+              </motion.div>
+              
+              {/* Music Visualization */}
+                  <motion.div 
+                    className="relative"
+                    variants={slideUp}
+                  >
+                    <div className="aspect-square bg-gradient-to-br from-[#003366]/30 to-[#0077b6]/30 rounded-3xl border border-white/10 backdrop-blur-sm p-6 sm:p-8 md:p-12 flex items-center justify-center">
+                      <div className="relative w-full h-full">
+                        {/* Central 3D Music Note */}
+                        <motion.div
+                          className="absolute inset-0 flex items-center justify-center"
+                          animate={{
+                            rotateX: [0, 360],
+                            rotateY: [0, 360],
+                            scale: [1, 1.2, 1],
+                          }}
+                          transition={{
+                            duration: 5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                          style={{
+                            perspective: "1000px", // Adds 3D perspective
+                          }}
+                        >
+                          <span className="text-5xl sm:text-6xl md:text-7xl text-[#add8e6] drop-shadow-lg">
+                            ♬
+                          </span>
+                        </motion.div>
+
+                        {/* Rotating Entertainment Icons */}
+                        <motion.div 
+                          className="absolute inset-0"
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                        >
+                          <Play className="absolute top-2 sm:top-3 md:top-4 left-1/2 -translate-x-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#089fd1]" />
+                          <Headphones className="absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#0899e7]" />
+                          <Radio className="absolute bottom-2 sm:bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#4787b1]" />
+                          <Mic className="absolute left-2 sm:left-3 md:left-4 top-1/2 -translate-y-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#2471be]" />
+                        </motion.div>
+
+                        {/* Counter-rotating Volume Icons */}
+                        <motion.div 
+                          className="absolute inset-8"
+                          animate={{ rotate: -360 }}
+                          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                        >
+                          <Volume2 className="absolute top-0 left-1/2 -translate-x-1/2 w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6 text-[#add8e6]/70" />
+                          <Volume2 className="absolute right-0 top-1/2 -translate-y-1/2 w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6 text-[#089fd1]/70" />
+                          <Volume2 className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6 text-[#0899e7]/70" />
+                          <Volume2 className="absolute left-0 top-1/2 -translate-y-1/2 w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6 text-[#4787b1]/70" />
+                        </motion.div>
+                        
+                        {/* Audio Wave Lines */}
+                        <svg className="absolute inset-0 w-full h-full">
+                          <defs>
+                            <linearGradient id="wave-gradient">
+                              <stop offset="0%" stopColor="#add8e6" stopOpacity="0.4"/>
+                              <stop offset="100%" stopColor="#0077b6" stopOpacity="0.8"/>
+                            </linearGradient>
+                          </defs>
+                          {/* Animated sound waves */}
+                          <motion.circle 
+                            cx="50%" 
+                            cy="50%" 
+                            r="30%" 
+                            stroke="url(#wave-gradient)" 
+                            strokeWidth="1" 
+                            fill="none"
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{ pathLength: 1, opacity: [0, 1, 0] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: 0 }}
+                          />
+                          <motion.circle 
+                            cx="50%" 
+                            cy="50%" 
+                            r="45%" 
+                            stroke="url(#wave-gradient)" 
+                            strokeWidth="1" 
+                            fill="none"
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{ pathLength: 1, opacity: [0, 1, 0] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                          />
+                          <motion.circle 
+                            cx="50%" 
+                            cy="50%" 
+                            r="60%" 
+                            stroke="url(#wave-gradient)" 
+                            strokeWidth="1" 
+                            fill="none"
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{ pathLength: 1, opacity: [0, 1, 0] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                          />
+                        </svg>
+
+                        {/* Floating Musical Notes */}
+                        <motion.div 
+                          className="absolute top-4 right-6 text-[#add8e6]/60"
+                          animate={{ y: [-5, 5, -5] }}
+                          transition={{ duration: 3, repeat: Infinity }}
+                        >
+                          ♪
+                        </motion.div>
+                        <motion.div 
+                          className="absolute bottom-6 left-4 text-[#0899e7]/60"
+                          animate={{ y: [5, -5, 5] }}
+                          transition={{ duration: 2.5, repeat: Infinity, delay: 1 }}
+                        >
+                          ♫
+                        </motion.div>
+                        <motion.div 
+                          className="absolute top-8 left-8 text-[#4787b1]/60"
+                          animate={{ y: [-3, 7, -3] }}
+                          transition={{ duration: 2.8, repeat: Infinity, delay: 0.5 }}
+                        >
+                          ♩
+                        </motion.div>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              </div>
+                  </motion.div>
             </div>
-          </motion.div>
-        </div>
-      </section>  
+          </div>
+        </motion.div>
+      </div>
+    </section>
     </motion.div>
   );
 };
