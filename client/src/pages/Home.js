@@ -70,23 +70,6 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) {
-    return (
-      <div className="container px-4 py-8 mx-auto">
-        <div className="flex justify-center">
-          <div className="w-12 h-12 border-b-2 rounded-full animate-spin border-[#0077b6]"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container px-4 py-8 mx-auto">
-        <div className="text-center text-red-500">{error}</div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-white">
@@ -116,29 +99,40 @@ const Home = () => {
 
 
       {/* Featured Content Section */}
-      <section className="py-20 bg-white">
-        <div className="container px-6 mx-auto">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl font-light text-[#192f4a] mb-4">Trending Now</h2>
-            <p className="text-[#005691] text-lg max-w-2xl mx-auto">Discover the most engaging content from our creative community</p>
+        <section className="py-20 bg-white">
+          <div className="container px-6 mx-auto">
+            <div className="mb-16 text-center">
+              <h2 className="text-4xl font-light text-[#192f4a] mb-4">Trending Now</h2>
+              <p className="text-[#005691] text-lg max-w-2xl mx-auto">
+                Discover the most engaging content from our creative community
+              </p>
+            </div>
+
+            {/* Video Grid */}
+            {videos && videos.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 mb-12 md:grid-cols-2 lg:grid-cols-4">
+                {videos.map((video) => (
+                  <VideoCard key={video.id} video={video} />
+                ))}
+              </div>
+            ) : (
+              <div className="mb-12 text-center text-gray-500">
+                <p>No trending videos available right now.</p>
+              </div>
+            )}
+
+            {/* Button */}
+            <div className="text-center">
+              <Link to="/trending">
+                <button className="inline-flex items-center px-8 py-3 bg-[#192f4a] text-white rounded-full hover:bg-[#003366] transition-all duration-300 group">
+                  <span>Explore All Videos</span>
+                  <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                </button>
+              </Link>
+            </div>
           </div>
-          
-          <div className="grid grid-cols-1 gap-6 mb-12 md:grid-cols-2 lg:grid-cols-4">
-            {videos.map((video) => (
-              <VideoCard key={video.id} video={video} />
-            ))}
-          </div>
-          
-          <div className="text-center">
-            <Link to="/trending">
-              <button className="inline-flex items-center px-8 py-3 bg-[#192f4a] text-white rounded-full hover:bg-[#003366] transition-all duration-300 group">
-                <span>Explore All Videos</span>
-                <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-              </button>
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+
 
       <Banner/>
 

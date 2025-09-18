@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Play, Eye, Heart, Clock } from 'lucide-react';
+import { Play, Eye, Heart, Clock, AlertCircle } from 'lucide-react';
 
 const VideoCard = ({ video }) => {
+  // Check if video data is invalid or missing
+  const isValidVideo = video && video.id && video.title && video.user_id;
+
   const formatViews = (views) => {
     if (!views) return '0 views';
     if (views >= 1000000) {
@@ -13,38 +16,26 @@ const VideoCard = ({ video }) => {
     return views + ' views';
   };
 
-
   // Handle thumbnail path
   const getThumbnailSrc = () => {
     if (!video.thumbnail) return 'http://localhost:5000/default-thumbnail.jpg';
-    
-    // If thumbnail is a placeholder
     if (video.thumbnail === 'placeholder') {
       return 'http://localhost:5000/default-thumbnail.jpg';
     }
-    
-    // Check if thumbnail is in a subdirectory (processed video)
     if (video.thumbnail.includes('/')) {
       return `http://localhost:5000/${video.thumbnail}`;
     }
-    
-    // Default case - assume it's in the thumbnails directory
     return `http://localhost:5000/${video.thumbnail}`;
   };
 
-  // Handle avatar path - FIXED: Check if avatar exists and handle properly
+  // Handle avatar path
   const getAvatarSrc = () => {
-    // If avatar is not provided or is empty
     if (!video.avatar || video.avatar === 'null' || video.avatar === 'undefined') {
       return 'http://localhost:5000/default-avatar.png';
     }
-    
-    // If avatar is a full URL (from social logins, etc.)
     if (video.avatar.startsWith('http')) {
       return video.avatar;
     }
-    
-    // If avatar is a local file path
     return `http://localhost:5000/${video.avatar}`;
   };
 
@@ -58,14 +49,12 @@ const VideoCard = ({ video }) => {
     e.target.src = 'http://localhost:5000/default-avatar.png';
   };
 
-   const formatDate = (dateString) => {
+  const formatDate = (dateString) => {
     if (!dateString) return 'Unknown date';
-    
     const now = new Date();
     const date = new Date(dateString);
     const diffTime = Math.abs(now - date);
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return '1 day ago';
     if (diffDays < 7) return `${diffDays} days ago`;
@@ -74,14 +63,11 @@ const VideoCard = ({ video }) => {
     return `${Math.floor(diffDays / 365)} years ago`;
   };
 
-
-    const formatDuration = (seconds) => {
+  const formatDuration = (seconds) => {
     if (!seconds || seconds <= 0) return '0:00';
-    
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
@@ -98,9 +84,36 @@ const VideoCard = ({ video }) => {
     return likes.toString();
   };
 
-  
+  // Render error UI if video data is invalid
+  if (!isValidVideo) {
+    return (
+      <div className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-[#add8e6]/30">
+        <div className="relative flex items-center justify-center overflow-hidden aspect-video rounded-t-2xl bg-gradient-to-br from-gray-100 to-gray-200">
+          <div className="flex flex-col items-center p-4 space-y-2 text-center">
+            <AlertCircle className="w-8 h-8 text-[#192f4a]" />
+            <p className="text-[#192f4a] font-medium text-sm">
+              Oops! Something went wrong.
+            </p>
+            <p className="text-xs text-gray-500">
+              We couldn't load this video. Please try again later.
+            </p>
+          </div>
+        </div>
+        <div className="p-5">
+          <p className="text-[#192f4a] font-semibold text-base">
+            Video Unavailable
+          </p>
+          <p className="mt-2 text-xs text-gray-500">
+            Check your connection or contact support if the issue persists.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Render normal video card if data is valid
   return (
-     <div className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-[#add8e6]/30">
+    <div className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-[#add8e6]/30">
       {/* Thumbnail Section */}
       <Link to={`/watch/${video.id}`} className="relative block">
         <div className="relative overflow-hidden aspect-video rounded-t-2xl bg-gradient-to-br from-gray-100 to-gray-200">
@@ -190,9 +203,6 @@ const VideoCard = ({ video }) => {
             {formatDate(video.created_at)}
           </div>
         </div>
-        
-        {/* Tags (if available) */}
-
         
         {/* Quality Badge */}
         {video.quality && (
