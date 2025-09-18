@@ -137,59 +137,59 @@ const Home = () => {
       <Banner/>
 
       {/* Features Showcase */}
-<section className="py-8 bg-gray-50 md:py-20">
-  <div className="container px-3 mx-auto md:px-6">
-    <div className="mb-8 text-center md:mb-16">
-      <h2 className="text-xl font-light text-[#192f4a] mb-2 md:text-4xl md:mb-4">Built for Creators</h2>
-      <p className="text-[#005691] text-sm md:text-lg">Professional tools that scale with your ambitions</p>
-    </div>
-    
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
-      {features.map((feature, index) => (
-        <div key={index} className="p-4 transition-all duration-500 bg-white shadow-sm rounded-xl hover:shadow-xl group md:p-8 md:rounded-3xl">
-          <div className={`inline-flex items-center justify-center w-10 h-10 mb-3 bg-gradient-to-br ${feature.color} rounded-lg group-hover:scale-105 transition-transform duration-300 md:w-16 md:h-16 md:mb-6 md:rounded-2xl md:group-hover:scale-110`}>
-            <feature.icon className="w-4 h-4 text-white md:w-7 md:h-7" />
+      <section className="py-8 bg-gray-50 md:py-20">
+        <div className="container px-3 mx-auto md:px-6">
+          <div className="mb-8 text-center md:mb-16">
+            <h2 className="text-xl font-light text-[#192f4a] mb-2 md:text-4xl md:mb-4">Built for Creators</h2>
+            <p className="text-[#005691] text-sm md:text-lg">Professional tools that scale with your ambitions</p>
           </div>
-          <h3 className="text-base font-semibold text-[#192f4a] mb-2 md:text-xl md:mb-4">{feature.title}</h3>
-          <p className="text-[#005691] text-xs leading-relaxed md:text-base">{feature.description}</p>
+          
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
+            {features.map((feature, index) => (
+              <div key={index} className="p-4 transition-all duration-500 bg-white shadow-sm rounded-xl hover:shadow-xl group md:p-8 md:rounded-3xl">
+                <div className={`inline-flex items-center justify-center w-10 h-10 mb-3 bg-gradient-to-br ${feature.color} rounded-lg group-hover:scale-105 transition-transform duration-300 md:w-16 md:h-16 md:mb-6 md:rounded-2xl md:group-hover:scale-110`}>
+                  <feature.icon className="w-4 h-4 text-white md:w-7 md:h-7" />
+                </div>
+                <h3 className="text-base font-semibold text-[#192f4a] mb-2 md:text-xl md:mb-4">{feature.title}</h3>
+                <p className="text-[#005691] text-xs leading-relaxed md:text-base">{feature.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Creator Spotlight */}
-      <section className="py-20 bg-gradient-to-br from-[#192f4a] to-[#003366] text-white relative overflow-hidden">
+      <section className="py-12 bg-gradient-to-br from-[#192f4a] to-[#003366] text-white relative overflow-hidden md:py-20">
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
+        <div className="container relative z-10 px-4 mx-auto md:px-6">
+          <div className="grid items-center grid-cols-1 gap-8 md:grid-cols-2 md:gap-12">
             <div>
-              <h2 className="mb-6 text-4xl font-light">Join the Creator Economy</h2>
-              <p className="text-xl text-[#add8e6] mb-8 leading-relaxed">
+              <h2 className="mb-4 text-xl font-light md:text-4xl md:mb-6">Join the Creator Economy</h2>
+              <p className="text-sm text-[#add8e6] mb-6 leading-relaxed md:text-xl md:mb-8">
                 Turn your passion into profit with our comprehensive creator program, offering revenue sharing, 
                 brand partnerships, and growth tools.
               </p>
-              <div className="mb-8 space-y-4">
+              <div className="mb-6 space-y-3 md:mb-8 md:space-y-4">
                 {["Monetization tools", "Brand collaboration platform", "Detailed analytics", "Community support"].map((item, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-[#add8e6]" />
-                    <span>{item}</span>
+                  <div key={index} className="flex items-center space-x-2 md:space-x-3">
+                    <CheckCircle className="w-4 h-4 text-[#add8e6] md:w-5 md:h-5" />
+                    <span className="text-xs md:text-base">{item}</span>
                   </div>
                 ))}
               </div>
               <Link to="/login">
-                <button className="px-6 py-2 text-sm font-semibold text-white transition-all duration-300 border border-white rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 md:text-base">
+                <button className="px-4 py-1.5 text-[0.65rem] font-semibold text-white transition-all duration-300 border border-white rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 md:px-6 md:py-2 md:text-base">
                   Become a Creator
                 </button>
               </Link>
             </div>
-                <div className="relative">
-              <div className="p-8 bg-white/10 backdrop-blur-sm rounded-3xl">
+            <div className="relative">
+              <div className="p-6 bg-white/10 backdrop-blur-sm rounded-2xl md:p-8 md:rounded-3xl">
                 {/* Video Player */}
-                <div className="mb-6 overflow-hidden aspect-video rounded-2xl">
+                <div className="mb-4 overflow-hidden aspect-video rounded-xl md:mb-6 md:rounded-2xl">
                   <video
                     src={VueonVideo}
-                    className="object-cover w-full h-full rounded-2xl"
+                    className="object-cover w-full h-full rounded-xl md:rounded-2xl"
                     autoPlay
                     loop
                     muted
@@ -198,17 +198,21 @@ const Home = () => {
                 </div>
 
                 {/* Company Info */}
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-[#add8e6] rounded-full flex items-center justify-center text-[#192f4a] font-semibold text-sm">
-                      VN
+                <div className="space-y-2 md:space-y-3">
+                  <div className="flex items-center space-x-2 md:space-x-3">
+                    <div className="w-8 h-8  rounded-full flex items-center justify-center text-[#192f4a] font-semibold text-[0.65rem] md:w-10 md:h-10 md:text-sm">
+                    <img 
+                      src="/logo2.png" 
+                      alt="Vueon Logo" 
+                      className="object-contain w-8 h-8"
+                    />                      
                     </div>
                     <div>
-                      <div className="font-semibold">Vueon</div>
-                      <div className="text-sm text-[#add8e6]">Official Platform</div>
+                      <div className="text-xs font-semibold md:text-base">Vueon</div>
+                      <div className="text-[0.65rem] text-[#add8e6] md:text-sm">Official Platform</div>
                     </div>
                   </div>
-                  <div className="text-sm text-[#add8e6]">
+                  <div className="text-[0.65rem] text-[#add8e6] md:text-sm">
                     Latest: "The Ultimate Video Streaming Experience"
                   </div>
                 </div>
@@ -219,34 +223,34 @@ const Home = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="container px-6 mx-auto">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl font-light text-[#192f4a] mb-4">Loved by Creators</h2>
-            <p className="text-[#005691] text-lg">See what our community has to say</p>
+      <section className="py-12 bg-white md:py-20">
+        <div className="container px-4 mx-auto md:px-6">
+          <div className="mb-8 text-center md:mb-16">
+            <h2 className="text-2xl font-light text-[#192f4a] mb-3 md:text-4xl md:mb-4">Loved by Creators</h2>
+            <p className="text-[#005691] text-sm md:text-lg">See what our community has to say</p>
           </div>
           
-          <div className="max-w-4xl mx-auto">
-            <div className="relative p-12 overflow-hidden text-center bg-gray-50 rounded-3xl">
+          <div className="max-w-3xl mx-auto md:max-w-4xl">
+            <div className="relative p-6 overflow-hidden text-center bg-gray-50 rounded-2xl md:p-12 md:rounded-3xl">
               <div className="absolute inset-0 bg-gradient-to-br from-[#add8e6]/10 to-[#005691]/10"></div>
               <div className="relative z-10">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-full mx-auto mb-6 flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-full mx-auto mb-4 flex items-center justify-center text-white font-bold text-sm md:w-16 md:h-16 md:mb-6 md:text-lg">
                   {testimonials[currentTestimonial].avatar}
                 </div>
-                <blockquote className="text-xl text-[#192f4a] mb-6 italic">
+                <blockquote className="text-base text-[#192f4a] mb-4 italic md:text-xl md:mb-6">
                   "{testimonials[currentTestimonial].text}"
                 </blockquote>
-                <div className="font-semibold text-[#192f4a]">{testimonials[currentTestimonial].name}</div>
-                <div className="text-[#005691]">{testimonials[currentTestimonial].role}</div>
+                <div className="font-semibold text-sm text-[#192f4a] md:text-base">{testimonials[currentTestimonial].name}</div>
+                <div className="text-[#005691] text-xs md:text-base">{testimonials[currentTestimonial].role}</div>
               </div>
             </div>
             
-            <div className="flex justify-center mt-8 space-x-2">
+            <div className="flex justify-center mt-6 space-x-2 md:mt-8">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`w-2 h-2 rounded-full transition-all duration-300 md:w-3 md:h-3 ${
                     index === currentTestimonial ? 'bg-[#005691]' : 'bg-gray-300'
                   }`}
                 />
@@ -257,41 +261,40 @@ const Home = () => {
       </section>
 
       {/* Platform Benefits */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-        <div className="container px-6 mx-auto">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl font-light text-[#192f4a] mb-4">Why Choose Vueon?</h2>
-            <p className="text-[#005691] text-lg max-w-2xl mx-auto">Experience the difference with our cutting-edge platform</p>
+      <section className="py-12 bg-gradient-to-b from-gray-50 to-white md:py-20">
+        <div className="container px-4 mx-auto md:px-6">
+          <div className="mb-8 text-center md:mb-16">
+            <h2 className="text-2xl font-light text-[#192f4a] mb-3 md:text-4xl md:mb-4">Why Choose Vueon?</h2>
+            <p className="text-[#005691] text-sm max-w-xl mx-auto md:text-lg md:max-w-2xl">Experience the difference with our cutting-edge platform</p>
           </div>
           
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <div className="p-8 text-center transition-all duration-300 bg-white shadow-sm rounded-3xl hover:shadow-lg">
-              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-2xl">
-                <Shield className="text-white w-7 h-7" />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
+            <div className="p-6 text-center transition-all duration-300 bg-white shadow-sm rounded-2xl hover:shadow-lg md:p-8 md:rounded-3xl">
+              <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-xl md:w-16 md:h-16 md:mb-6 md:rounded-2xl">
+                <Shield className="w-5 h-5 text-white md:w-7 md:h-7" />
               </div>
-              <h3 className="text-xl font-semibold text-[#192f4a] mb-4">Secure & Reliable</h3>
-              <p className="text-[#005691]">Enterprise-grade security with 99.9% uptime guarantee for your content.</p>
+              <h3 className="text-lg font-semibold text-[#192f4a] mb-3 md:text-xl md:mb-4">Secure & Reliable</h3>
+              <p className="text-[#005691] text-sm md:text-base">Enterprise-grade security with 99.9% uptime guarantee for your content.</p>
             </div>
             
-            <div className="p-8 text-center transition-all duration-300 bg-white shadow-sm rounded-3xl hover:shadow-lg">
-              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-[#0077b6] to-[#add8e6] rounded-2xl">
-                <TrendingUp className="text-white w-7 h-7" />
+            <div className="p-6 text-center transition-all duration-300 bg-white shadow-sm rounded-2xl hover:shadow-lg md:p-8 md:rounded-3xl">
+              <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-gradient-to-br from-[#0077b6] to-[#add8e6] rounded-xl md:w-16 md:h-16 md:mb-6 md:rounded-2xl">
+                <TrendingUp className="w-5 h-5 text-white md:w-7 md:h-7" />
               </div>
-              <h3 className="text-xl font-semibold text-[#192f4a] mb-4">Growth Focused</h3>
-              <p className="text-[#005691]">AI-powered recommendations and analytics to help you reach more viewers.</p>
+              <h3 className="text-lg font-semibold text-[#192f4a] mb-3 md:text-xl md:mb-4">Growth Focused</h3>
+              <p className="text-[#005691] text-sm md:text-base">AI-powered recommendations and analytics to help you reach more viewers.</p>
             </div>
             
-            <div className="p-8 text-center transition-all duration-300 bg-white shadow-sm rounded-3xl hover:shadow-lg">
-              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-[#003366] to-[#005691] rounded-2xl">
-                <Heart className="text-white w-7 h-7" />
+            <div className="p-6 text-center transition-all duration-300 bg-white shadow-sm rounded-2xl hover:shadow-lg md:p-8 md:rounded-3xl">
+              <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-gradient-to-br from-[#003366] to-[#005691] rounded-xl md:w-16 md:h-16 md:mb-6 md:rounded-2xl">
+                <Heart className="w-5 h-5 text-white md:w-7 md:h-7" />
               </div>
-              <h3 className="text-xl font-semibold text-[#192f4a] mb-4">Community First</h3>
-              <p className="text-[#005691]">Build meaningful connections with viewers and fellow creators.</p>
+              <h3 className="text-lg font-semibold text-[#192f4a] mb-3 md:text-xl md:mb-4">Community First</h3>
+              <p className="text-[#005691] text-sm md:text-base">Build meaningful connections with viewers and fellow creators.</p>
             </div>
           </div>
         </div>
       </section>
-
       
     </div>
   );

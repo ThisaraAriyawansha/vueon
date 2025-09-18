@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Upload, Share, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from "react-router-dom";
+
 
 const HeroSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -157,6 +159,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.9 }}
             >
+            <Link to="/login">
               <motion.button 
                 className="flex items-center justify-center px-4 py-2 space-x-2 text-sm font-medium text-white transition-all duration-300 transform border border-white rounded-full shadow-md bg-primary bg-opacity-90 backdrop-blur-md hover:scale-105"
                 whileHover={{ scale: 1.05 }}
@@ -173,6 +176,7 @@ const HeroSection = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-7-7l7 7-7 7" />
                 </svg>
               </motion.button>
+            </Link>
             </motion.div>
           </motion.div>
           
