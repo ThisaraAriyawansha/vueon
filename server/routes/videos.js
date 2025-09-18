@@ -169,25 +169,63 @@ router.get('/', (req, res) => {
   );
 });
 
-// Get trending videos - Updated query
+// Get trending videos with filtering options
 router.get('/trending', (req, res) => {
-  db.execute(
-    `SELECT v.*, u.username, u.avatar 
-     FROM videos v 
-     JOIN users u ON v.user_id = u.id 
-     WHERE v.status = 'published'
-     ORDER BY v.views DESC 
-     LIMIT 10`,
-    [],
-    (error, results) => {
-      if (error) {
-        console.error('Database error:', error);
-        return res.status(500).json({ message: 'Database error' });
-      }
-      
-      res.json(results);
+  const { category, sort = 'views', time } = req.query;
+  
+  let query = `
+    SELECT v.*, u.username, u.avatar 
+    FROM videos v 
+    JOIN users u ON v.user_id = u.id 
+    WHERE v.status = 'published'
+  `;
+  
+  let params = [];
+  
+  // Add category filter if provided
+  if (category && category !== 'all') {
+    query += ' AND v.category = ?';
+    params.push(category);
+  }
+  
+  // Add time filter if provided
+  if (time && time !== 'all') {
+    let dateFilter = '';
+    if (time === 'today') {
+      dateFilter = 'DATE(v.created_at) = CURDATE()';
+    } else if (time === 'week') {
+      dateFilter = 'v.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
+    } else if (time === 'month') {
+      dateFilter = 'v.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)';
     }
-  );
+    
+    if (dateFilter) {
+      query += ` AND ${dateFilter}`;
+    }
+  }
+  
+  // Add sorting
+  if (sort === 'views') {
+    query += ' ORDER BY v.views DESC';
+  } else if (sort === 'likes') {
+    query += ' ORDER BY v.like_count DESC';
+  } else if (sort === 'newest') {
+    query += ' ORDER BY v.created_at DESC';
+  } else {
+    query += ' ORDER BY v.views DESC';
+  }
+  
+  // Add limit
+  query += ' LIMIT 20';
+  
+  db.execute(query, params, (error, results) => {
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(500).json({ message: 'Database error' });
+    }
+    
+    res.json(results);
+  });
 });
 
 // Get video by ID - Updated query
