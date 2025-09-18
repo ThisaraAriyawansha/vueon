@@ -49,7 +49,7 @@ const PearlStaySection = () => {
             Your browser does not support the video tag.
           </video>
           {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="absolute inset-0 bg-black/50"></div>
         </div>
 
         {/* Content */}

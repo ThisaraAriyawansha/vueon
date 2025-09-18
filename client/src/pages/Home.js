@@ -295,30 +295,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Call-to-Action Section */}
-      <section className="py-20 bg-gradient-to-br from-[#005691] to-[#0077b6] text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="container relative z-10 px-6 mx-auto text-center">
-          <h2 className="mb-6 text-4xl font-light md:text-5xl">Ready to Share Your Story?</h2>
-          <p className="text-xl text-[#add8e6] mb-10 max-w-2xl mx-auto leading-relaxed">
-            Join millions of creators who trust Vueon to bring their vision to life. 
-            Start your journey today.
-          </p>
-          <div className="flex flex-col justify-center gap-4 sm:flex-row">
-            <button className="px-8 py-4 bg-white text-[#192f4a] rounded-full text-lg font-semibold hover:bg-[#add8e6] transition-all duration-300 inline-flex items-center justify-center group">
-              <span>Start Creating</span>
-              <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
-            </button>
-            <button className="px-8 py-4 border-2 border-white text-white rounded-full text-lg font-semibold hover:bg-white hover:text-[#192f4a] transition-all duration-300">
-              Watch Demo
-            </button>
-          </div>
-        </div>
-        
-        {/* Decorative elements */}
-        <div className="absolute rounded-full w-96 h-96 -top-48 -left-48 bg-white/5 blur-3xl"></div>
-        <div className="absolute rounded-full w-96 h-96 -bottom-48 -right-48 bg-white/5 blur-3xl"></div>
-      </section>
+      
     </div>
   );
 };
