@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Upload, Users, Sparkles, Globe, Heart, ArrowRight,  Cpu, Code, Eye, Brain } from 'lucide-react';
+import Banner from './HomeComponent/Banner';
 
 
 const AboutUs = () => {
@@ -8,8 +9,8 @@ const AboutUs = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#192f4a] to-[#003366]">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/90 to-[#005691]/90"></div>
-        <div className="container relative px-6 pt-32 pb-20 mx-auto">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/90 to-[#005691]/90 "></div>
+        <div className="container relative px-6 pt-32 pb-20 mx-auto mt-16 mb-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="mb-6 text-6xl font-thin tracking-tight text-white">
               About <span className="font-semibold bg-gradient-to-r from-[#0077b6] to-[#add8e6] bg-clip-text text-transparent">Vueon</span>
@@ -122,40 +123,7 @@ const AboutUs = () => {
       </section>
 
       {/* Team Values Section */}
-      <section className="py-20 bg-[#003366]">
-        <div className="container px-6 mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-16 text-center">
-              <h2 className="mb-6 text-4xl font-light text-white">Our Values</h2>
-              <p className="text-xl text-[#add8e6] font-light">
-                The principles that guide everything we do
-              </p>
-            </div>
-            
-            <div className="grid gap-8 md:grid-cols-2">
-              <div className="p-8 bg-white/5 backdrop-blur-sm rounded-2xl">
-                <div className="flex items-center mb-4">
-                  <Sparkles className="w-8 h-8 text-[#add8e6] mr-4" />
-                  <h3 className="text-2xl font-light text-white">Innovation First</h3>
-                </div>
-                <p className="text-[#add8e6] leading-relaxed">
-                  We push boundaries and challenge conventions to create experiences that didn't exist before.
-                </p>
-              </div>
-
-              <div className="p-8 bg-white/5 backdrop-blur-sm rounded-2xl">
-                <div className="flex items-center mb-4">
-                  <Globe className="w-8 h-8 text-[#add8e6] mr-4" />
-                  <h3 className="text-2xl font-light text-white">Global Impact</h3>
-                </div>
-                <p className="text-[#add8e6] leading-relaxed">
-                  Every feature we build considers its impact on creators worldwide, regardless of their background.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Banner/>
 
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-[#005691] to-[#0077b6]">
@@ -185,85 +153,85 @@ const AboutUs = () => {
         </div>
       </section>
 
-      <section className="relative py-32 bg-white">
-        <div className="container px-6 mx-auto ">
-          <div className="mx-auto max-w-7xl bg-gradient-to-br from-[#192f4a] via-[#003366] to-[#005691] rounded-3xl">
-            <div className="p-16 border shadow-2xl backdrop-blur-xl bg-white/5 border-white/10 rounded-3xl ">
-              <div className="grid items-center gap-20 lg:grid-cols-2 ">
-                <div>
-                  <h2 className="mb-8 text-6xl leading-tight text-white font-ultralight">
-                    Our <span className="font-medium text-[#add8e6]">Mission</span>
-                  </h2>
-                  <div className="space-y-6 text-lg font-light leading-relaxed text-white/80">
-                    <p>
-                      We're engineering the future of human creativity. Through advanced AI, 
-                      quantum-fast processing, and intuitive design, we're building more than 
-                      a platform—we're architecting a new creative ecosystem.
-                    </p>
-                    <p>
-                      Every line of code, every pixel, every interaction is crafted to amplify 
-                      human potential. This is creativity, reimagined for the digital age.
-                    </p>
-                  </div>
-                  
-                  {/* Tech Highlights */}
-                  <div className="grid grid-cols-2 gap-6 mt-12">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-[#add8e6] rounded-full animate-pulse"></div>
-                      <span className="text-sm font-medium text-white/70">Neural Networks</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-[#0077b6] rounded-full animate-pulse"></div>
-                      <span className="text-sm font-medium text-white/70">Edge Computing</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-[#005691] rounded-full animate-pulse"></div>
-                      <span className="text-sm font-medium text-white/70">Blockchain Security</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-[#003366] rounded-full animate-pulse"></div>
-                      <span className="text-sm font-medium text-white/70">Quantum Encryption</span>
-                    </div>
-                  </div>
+    <section className="relative py-16 bg-white md:py-32">
+      <div className="container px-4 mx-auto sm:px-6">
+        <div className="mx-auto max-w-7xl bg-gradient-to-br from-[#192f4a] via-[#003366] to-[#005691] rounded-3xl">
+          <div className="p-8 border shadow-2xl sm:p-12 md:p-16 backdrop-blur-xl bg-white/5 border-white/10 rounded-3xl">
+            <div className="grid items-center gap-10 lg:gap-20 lg:grid-cols-2">
+              <div>
+                <h2 className="mb-6 text-3xl leading-tight text-white sm:text-4xl md:text-5xl lg:text-6xl font-ultralight">
+                  Our <span className="font-medium text-[#add8e6]">Mission</span>
+                </h2>
+                <div className="space-y-4 text-base font-light leading-relaxed sm:text-lg text-white/80">
+                  <p>
+                    We're engineering the future of human creativity. Through advanced AI, 
+                    quantum-fast processing, and intuitive design, we're building more than 
+                    a platform—we're architecting a new creative ecosystem.
+                  </p>
+                  <p>
+                    Every line of code, every pixel, every interaction is crafted to amplify 
+                    human potential. This is creativity, reimagined for the digital age.
+                  </p>
                 </div>
                 
-                {/* 3D Tech Visualization */}
-                <div className="relative">
-                  <div className="aspect-square bg-gradient-to-br from-[#003366]/30 to-[#0077b6]/30 rounded-3xl border border-white/10 backdrop-blur-sm p-12 flex items-center justify-center">
-                    <div className="relative w-full h-full">
-                      {/* Central Core */}
-                      <div className="absolute inset-1/2 w-16 h-16 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-[#add8e6] to-[#0077b6] rounded-full animate-pulse shadow-2xl shadow-[#0077b6]/50"></div>
-                      
-                      {/* Orbiting Elements */}
-                      <div className="absolute inset-0 animate-spin" style={{ animationDuration: '20s' }}>
-                        <Brain className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 text-[#add8e6]" />
-                        <Code className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 text-[#0077b6]" />
-                        <Cpu className="absolute bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 text-[#005691]" />
-                        <Eye className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 text-[#003366]" />
-                      </div>
-                      
-                      {/* Connection Lines */}
-                      <svg className="absolute inset-0 w-full h-full">
-                        <defs>
-                          <linearGradient id="line-gradient">
-                            <stop offset="0%" stopColor="#add8e6" stopOpacity="0.3"/>
-                            <stop offset="100%" stopColor="#0077b6" stopOpacity="0.8"/>
-                          </linearGradient>
-                        </defs>
-                        <path d="M50,50 L80,20 M50,50 L80,80 M50,50 L20,80 M50,50 L20,20" 
-                              stroke="url(#line-gradient)" 
-                              strokeWidth="2" 
-                              fill="none"
-                              className="animate-pulse" />
-                      </svg>
+                {/* Tech Highlights */}
+                <div className="grid grid-cols-1 gap-4 mt-8 sm:grid-cols-2 sm:gap-6 sm:mt-12">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-[#add8e6] rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium sm:text-sm text-white/70">Neural Networks</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-[#0077b6] rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium sm:text-sm text-white/70">Edge Computing</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-[#005691] rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium sm:text-sm text-white/70">Blockchain Security</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-[#16599c] rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium sm:text-sm text-white/70">Quantum Encryption</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* 3D Tech Visualization */}
+              <div className="relative">
+                <div className="aspect-square bg-gradient-to-br from-[#003366]/30 to-[#0077b6]/30 rounded-3xl border border-white/10 backdrop-blur-sm p-6 sm:p-8 md:p-12 flex items-center justify-center">
+                  <div className="relative w-full h-full">
+                    {/* Central Core */}
+                    <div className="absolute inset-1/2 w-12 sm:w-14 md:w-16 h-12 sm:h-14 md:h-16 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-[#add8e6] to-[#0077b6] rounded-full animate-pulse shadow-2xl shadow-[#0077b6]/50"></div>
+                    
+                    {/* Orbiting Elements */}
+                    <div className="absolute inset-0 animate-spin" style={{ animationDuration: '20s' }}>
+                      <Brain className="absolute top-2 sm:top-3 md:top-4 left-1/2 -translate-x-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#089fd1]" />
+                      <Code className="absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#0899e7]" />
+                      <Cpu className="absolute bottom-2 sm:bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#4787b1]" />
+                      <Eye className="absolute left-2 sm:left-3 md:left-4 top-1/2 -translate-y-1/2 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-[#2471be]" />
                     </div>
+                    
+                    {/* Connection Lines */}
+                    <svg className="absolute inset-0 w-full h-full">
+                      <defs>
+                        <linearGradient id="line-gradient">
+                          <stop offset="0%" stopColor="#add8e6" stopOpacity="0.3"/>
+                          <stop offset="100%" stopColor="#0077b6" stopOpacity="0.8"/>
+                        </linearGradient>
+                      </defs>
+                      <path d="M50% 50% L80% 20% M50% 50% L80% 80% M50% 50% L20% 80% M50% 50% L20% 20%" 
+                            stroke="url(#line-gradient)" 
+                            strokeWidth="2" 
+                            fill="none"
+                            className="animate-pulse" />
+                    </svg>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>     
+      </div>
+    </section>  
     </div>
   );
 };
