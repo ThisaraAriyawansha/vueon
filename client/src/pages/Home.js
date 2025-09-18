@@ -137,26 +137,26 @@ const Home = () => {
       <Banner/>
 
       {/* Features Showcase */}
-      <section className="py-20 bg-gray-50">
-        <div className="container px-6 mx-auto">
-          <div className="mb-16 text-center">
-            <h2 className="text-4xl font-light text-[#192f4a] mb-4">Built for Creators</h2>
-            <p className="text-[#005691] text-lg">Professional tools that scale with your ambitions</p>
+<section className="py-8 bg-gray-50 md:py-20">
+  <div className="container px-3 mx-auto md:px-6">
+    <div className="mb-8 text-center md:mb-16">
+      <h2 className="text-xl font-light text-[#192f4a] mb-2 md:text-4xl md:mb-4">Built for Creators</h2>
+      <p className="text-[#005691] text-sm md:text-lg">Professional tools that scale with your ambitions</p>
+    </div>
+    
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
+      {features.map((feature, index) => (
+        <div key={index} className="p-4 transition-all duration-500 bg-white shadow-sm rounded-xl hover:shadow-xl group md:p-8 md:rounded-3xl">
+          <div className={`inline-flex items-center justify-center w-10 h-10 mb-3 bg-gradient-to-br ${feature.color} rounded-lg group-hover:scale-105 transition-transform duration-300 md:w-16 md:h-16 md:mb-6 md:rounded-2xl md:group-hover:scale-110`}>
+            <feature.icon className="w-4 h-4 text-white md:w-7 md:h-7" />
           </div>
-          
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {features.map((feature, index) => (
-              <div key={index} className="p-8 transition-all duration-500 bg-white shadow-sm rounded-3xl hover:shadow-xl group">
-                <div className={`inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br ${feature.color} rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon className="text-white w-7 h-7" />
-                </div>
-                <h3 className="text-xl font-semibold text-[#192f4a] mb-4">{feature.title}</h3>
-                <p className="text-[#005691] leading-relaxed">{feature.description}</p>
-              </div>
-            ))}
-          </div>
+          <h3 className="text-base font-semibold text-[#192f4a] mb-2 md:text-xl md:mb-4">{feature.title}</h3>
+          <p className="text-[#005691] text-xs leading-relaxed md:text-base">{feature.description}</p>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* Creator Spotlight */}
       <section className="py-20 bg-gradient-to-br from-[#192f4a] to-[#003366] text-white relative overflow-hidden">
