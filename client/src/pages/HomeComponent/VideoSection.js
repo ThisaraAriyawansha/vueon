@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import videoFile from '../../assets/video/videoplayback1080Compress.mp4';
+import videoFile from '../../assets/video/68cb78de9025eb21cfbb311a.mp4';
 
 const PearlStaySection = () => {
   const videoRef = useRef(null);

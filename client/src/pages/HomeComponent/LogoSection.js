@@ -36,7 +36,7 @@ const LogoSection = () => {
       ref={sectionRef}
       className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100"
     >
-    <div className="mt-6mb-12 md:mt-24 md:mb-24">
+    <div className="mt-6mb-12 md:mt-16 md:mb-16">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute rounded-full -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-100/30 to-purple-100/30 blur-3xl animate-pulse"></div>

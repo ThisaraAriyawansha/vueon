@@ -5,8 +5,7 @@ import VideoCard from '../components/VideoCard';
 import HeroSection from '../components/HeroSection';
 import VideoSection from './HomeComponent/VideoSection';
 import LogoSection from './HomeComponent/LogoSection';
-
-
+import VueonVideo from "../assets/video/Generated File September 18, 2025 - 9_00AM.mp4";
 import { Play, Upload, Users, TrendingUp, Star, Shield, Zap, Globe, Award, ArrowRight, CheckCircle, BarChart3, Heart, Eye } from 'lucide-react';
 
 const Home = () => {
@@ -93,6 +92,8 @@ const Home = () => {
       {/* Hero Section */}
       <HeroSection />
       <LogoSection/>
+      <VideoSection/>
+
 
       {/* Stats Section */}
       <section className="py-20 bg-gradient-to-b from-white to-gray-50">
@@ -111,7 +112,6 @@ const Home = () => {
         </div>
       </section>
 
-      <VideoSection/>
 
 
       {/* Featured Content Section */}
@@ -180,26 +180,40 @@ const Home = () => {
                   </div>
                 ))}
               </div>
-              <button className="px-8 py-3 bg-white text-[#192f4a] rounded-full hover:bg-[#add8e6] transition-all duration-300 font-semibold">
-                Become a Creator
-              </button>
+              <Link to="/login">
+                <button className="px-6 py-2 text-sm font-semibold text-white transition-all duration-300 border border-white rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 md:text-base">
+                  Become a Creator
+                </button>
+              </Link>
             </div>
-            <div className="relative">
+                <div className="relative">
               <div className="p-8 bg-white/10 backdrop-blur-sm rounded-3xl">
-                <div className="aspect-video bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-2xl mb-6 flex items-center justify-center">
-                  <Play className="w-16 h-16 text-white/80" />
+                {/* Video Player */}
+                <div className="mb-6 overflow-hidden aspect-video rounded-2xl">
+                  <video
+                    src={VueonVideo}
+                    className="object-cover w-full h-full rounded-2xl"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  />
                 </div>
+
+                {/* Company Info */}
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-[#add8e6] rounded-full flex items-center justify-center text-[#192f4a] font-semibold text-sm">
-                      SC
+                      VN
                     </div>
                     <div>
-                      <div className="font-semibold">Sarah's Creative Studio</div>
-                      <div className="text-sm text-[#add8e6]">2.4M subscribers</div>
+                      <div className="font-semibold">Vueon</div>
+                      <div className="text-sm text-[#add8e6]">Official Platform</div>
                     </div>
                   </div>
-                  <div className="text-sm text-[#add8e6]">Latest: "Design Masterclass Series"</div>
+                  <div className="text-sm text-[#add8e6]">
+                    Latest: "The Ultimate Video Streaming Experience"
+                  </div>
                 </div>
               </div>
             </div>
