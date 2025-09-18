@@ -80,21 +80,21 @@ const Home = () => {
 
 
       {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-        <div className="container px-6 mx-auto">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center group">
-                <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-2xl group-hover:scale-110 transition-transform duration-300">
-                  <stat.icon className="text-white w-7 h-7" />
-                </div>
-                <div className="text-3xl font-light text-[#192f4a] mb-2">{stat.number}</div>
-                <div className="text-sm text-[#005691] font-medium">{stat.label}</div>
+    <section className="py-16 bg-gradient-to-b from-white to-gray-50 md:py-20">
+      <div className="container px-4 mx-auto md:px-6">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
+          {stats.map((stat, index) => (
+            <div key={index} className="text-center group">
+              <div className="inline-flex items-center justify-center w-12 h-12 mb-3 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-xl group-hover:scale-105 transition-transform duration-300 md:w-16 md:h-16 md:mb-4 md:rounded-2xl md:group-hover:scale-110">
+                <stat.icon className="w-5 h-5 text-white md:w-7 md:h-7" />
               </div>
-            ))}
-          </div>
+              <div className="text-2xl font-light text-[#192f4a] mb-1 md:text-3xl md:mb-2">{stat.number}</div>
+              <div className="text-xs text-[#005691] font-medium md:text-sm">{stat.label}</div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
+    </section>
 
 
 

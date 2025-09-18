@@ -245,55 +245,71 @@ const HeroSection = () => {
               </div>
               
               {/* Video info section */}
-              <div className="p-4 bg-slate-800">
-                <div className="flex items-start space-x-3">
+                <div className="p-4 bg-[#192f4a]">
+                  <div className="flex items-start space-x-3">
+                    {/* Logo / Avatar */}
                   <motion.div 
-                    className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600"
+                    className="flex items-center justify-center w-10 h-10 overflow-hidden rounded-full"
                     whileHover={{ scale: 1.1 }}
-                  />
-                  <div className="flex-1">
-                    <h3 className="font-medium text-white">Amazing Travel Vlog - Bali 2023</h3>
-                    <p className="text-sm text-gray-400">Adventure Seekers • 245K views</p>
-                    <div className="flex items-center mt-2 space-x-4">
-                      <div className="flex items-center text-sm text-gray-400">
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905a3.61 3.61 0 01-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                        </svg>
-                        2.4K
-                      </div>
-                      <div className="flex items-center text-sm text-gray-400">
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                        348
+                  >
+                    <img 
+                      src="/logo2.png" 
+                      alt="Vueon Logo" 
+                      className="object-contain w-8 h-8"
+                    />
+                  </motion.div>
+
+
+
+                    {/* Video Info */}
+                    <div className="flex-1">
+                      <h3 className="font-medium text-white">Vueon Exclusive Showcase</h3>
+                      <p className="text-sm text-[#add8e6]">Vueon Official • 120K views</p>
+
+                      {/* Stats */}
+                      <div className="flex items-center mt-2 space-x-4">
+                        <div className="flex items-center text-sm text-[#add8e6]">
+                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905a3.61 3.61 0 01-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                          </svg>
+                          8.2K
+                        </div>
+                        <div className="flex items-center text-sm text-[#add8e6]">
+                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          </svg>
+                          512
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+
             </motion.div>
             
             {/* Floating video thumbnails */}
             <motion.div 
-              className="absolute w-32 h-20 overflow-hidden transform rounded-lg shadow-lg -left-10 top-10 bg-gradient-to-r from-orange-600 to-red-600 rotate-6"
+              className="absolute w-20 overflow-hidden transform rounded-lg shadow-lg h-14 sm:w-32 sm:h-20 -left-6 top-6 sm:-left-10 sm:top-10 bg-gradient-to-r from-orange-600 to-red-600 rotate-6"
               variants={floatingVariants}
               animate="animate"
             >
               <div className="absolute inset-0 flex items-center justify-center">
-                <Play className="w-5 h-5 text-white" fill="white" />
+                <Play className="w-4 h-4 text-white sm:w-5 sm:h-5" fill="white" />
               </div>
             </motion.div>
+
             
-            <motion.div 
-              className="absolute w-32 h-20 overflow-hidden transform rounded-lg shadow-lg -right-10 bottom-10 bg-gradient-to-r from-purple-600 to-pink-600 -rotate-6"
-              variants={floatingVariants}
-              animate="animate"
-              transition={{ delay: 0.5 }}
-            >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Play className="w-5 h-5 text-white" fill="white" />
-              </div>
-            </motion.div>
+          <motion.div 
+            className="absolute w-20 overflow-hidden transform rounded-lg shadow-lg h-14 sm:w-32 sm:h-20 -right-6 bottom-6 sm:-right-10 sm:bottom-10 bg-gradient-to-r from-purple-600 to-pink-600 -rotate-6"
+            variants={floatingVariants}
+            animate="animate"
+            transition={{ delay: 0.5 }}
+          >
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Play className="w-4 h-4 text-white sm:w-5 sm:h-5" fill="white" />
+            </div>
+          </motion.div>
+
             
             {/* Streaming indicators */}
             <motion.div 
@@ -312,101 +328,104 @@ const HeroSection = () => {
             
             {/* View count indicator */}
             <motion.div 
-              className="absolute bottom-0 left-0 flex items-center px-3 py-1 space-x-1 rounded-full shadow-md bg-black/70"
+              className="absolute left-0 flex items-center px-2 py-0.5 sm:px-3 sm:py-1 space-x-1 rounded-full shadow-md -bottom-3 sm:-bottom-4 bg-black/70"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.2 }}
             >
-              <Users className="w-4 h-4 text-white" />
-              <span className="text-xs font-medium text-white">12.5K watching</span>
+              <Users className="w-3 h-3 text-white sm:w-4 sm:h-4" />
+              <span className="text-[10px] sm:text-xs font-medium text-white">
+                12.5K watching
+              </span>
             </motion.div>
+
           </motion.div>
         </motion.div>
         
         {/* Feature cards */}
         <motion.div 
-          className="grid grid-cols-1 gap-6 mt-16 md:grid-cols-2 lg:grid-cols-4"
+          className="grid grid-cols-1 gap-4 px-4 mt-12 sm:grid-cols-2 lg:grid-cols-4 sm:px-6 lg:px-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-50px" }}
         >
           {/* Easy Upload */}
           <motion.div 
-            className="p-6 transition-all duration-300 border bg-white/10 backdrop-blur-sm border-white/20 rounded-2xl hover:bg-white/20 group"
+            className="p-4 transition-all duration-300 border sm:p-6 bg-white/10 backdrop-blur-sm border-white/20 rounded-2xl hover:bg-white/20 group"
             variants={featureCardVariants}
             whileHover="hover"
           >
             <motion.div 
-              className="flex items-center justify-center w-12 h-12 mb-4 transition-transform duration-300 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl group-hover:scale-110"
-              whileHover={{ rotate: 5, scale: 1.1 }}
+              className="flex items-center justify-center w-10 h-10 mb-4 transition-transform duration-300 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl group-hover:scale-105"
+              whileHover={{ rotate: 5, scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <Upload className="w-6 h-6 text-white" />
+              <Upload className="w-5 h-5 text-white sm:w-6 sm:h-6" />
             </motion.div>
-            <h3 className="mb-2 text-lg font-semibold text-white">Easy Upload</h3>
-            <p className="text-sm leading-relaxed text-gray-300">
-              Drag and drop your videos for instant upload. Support for all major video formats and resolutions.
+            <h3 className="mb-2 text-base font-semibold text-white sm:text-lg">Easy Upload</h3>
+            <p className="text-xs leading-relaxed text-gray-300 sm:text-sm">
+              Drag and drop your videos for instant upload. Supports all major video formats and resolutions.
             </p>
           </motion.div>
           
           {/* HD Streaming */}
           <motion.div 
-            className="p-6 transition-all duration-300 border bg-white/10 backdrop-blur-sm border-white/20 rounded-2xl hover:bg-white/20 group"
+            className="p-4 transition-all duration-300 border sm:p-6 bg-white/10 backdrop-blur-sm border-white/20 rounded-2xl hover:bg-white/20 group"
             variants={featureCardVariants}
             whileHover="hover"
             transition={{ delay: 0.1 }}
           >
             <motion.div 
-              className="flex items-center justify-center w-12 h-12 mb-4 transition-transform duration-300 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl group-hover:scale-110"
-              whileHover={{ rotate: 5, scale: 1.1 }}
+              className="flex items-center justify-center w-10 h-10 mb-4 transition-transform duration-300 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl group-hover:scale-105"
+              whileHover={{ rotate: 5, scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <Play className="w-6 h-6 text-white" />
+              <Play className="w-5 h-5 text-white sm:w-6 sm:h-6" />
             </motion.div>
-            <h3 className="mb-2 text-lg font-semibold text-white">HD Streaming</h3>
-            <p className="text-sm leading-relaxed text-gray-300">
-              Crystal clear HD streaming with adaptive quality that adjusts to your connection speed.
+            <h3 className="mb-2 text-base font-semibold text-white sm:text-lg">HD Streaming</h3>
+            <p className="text-xs leading-relaxed text-gray-300 sm:text-sm">
+              Crystal-clear HD streaming with adaptive quality for any connection speed.
             </p>
           </motion.div>
           
           {/* Global Sharing */}
           <motion.div 
-            className="p-6 transition-all duration-300 border bg-white/10 backdrop-blur-sm border-white/20 rounded-2xl hover:bg-white/20 group"
+            className="p-4 transition-all duration-300 border sm:p-6 bg-white/10 backdrop-blur-sm border-white/20 rounded-2xl hover:bg-white/20 group"
             variants={featureCardVariants}
             whileHover="hover"
             transition={{ delay: 0.2 }}
           >
             <motion.div 
-              className="flex items-center justify-center w-12 h-12 mb-4 transition-transform duration-300 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl group-hover:scale-110"
-              whileHover={{ rotate: 5, scale: 1.1 }}
+              className="flex items-center justify-center w-10 h-10 mb-4 transition-transform duration-300 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl group-hover:scale-105"
+              whileHover={{ rotate: 5, scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <Share className="w-6 h-6 text-white" />
+              <Share className="w-5 h-5 text-white sm:w-6 sm:h-6" />
             </motion.div>
-            <h3 className="mb-2 text-lg font-semibold text-white">Global Sharing</h3>
-            <p className="text-sm leading-relaxed text-gray-300">
-              Share your content worldwide with built-in social media integration and embed options.
+            <h3 className="mb-2 text-base font-semibold text-white sm:text-lg">Global Sharing</h3>
+            <p className="text-xs leading-relaxed text-gray-300 sm:text-sm">
+              Share content globally with seamless social media integration and embeds.
             </p>
           </motion.div>
           
           {/* Community Driven */}
           <motion.div 
-            className="p-6 transition-all duration-300 border bg-white/10 backdrop-blur-sm border-white/20 rounded-2xl hover:bg-white/20 group"
+            className="p-4 transition-all duration-300 border sm:p-6 bg-white/10 backdrop-blur-sm border-white/20 rounded-2xl hover:bg-white/20 group"
             variants={featureCardVariants}
             whileHover="hover"
             transition={{ delay: 0.3 }}
           >
             <motion.div 
-              className="flex items-center justify-center w-12 h-12 mb-4 transition-transform duration-300 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl group-hover:scale-110"
-              whileHover={{ rotate: 5, scale: 1.1 }}
+              className="flex items-center justify-center w-10 h-10 mb-4 transition-transform duration-300 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl group-hover:scale-105"
+              whileHover={{ rotate: 5, scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <Users className="w-6 h-6 text-white" />
+              <Users className="w-5 h-5 text-white sm:w-6 sm:h-6" />
             </motion.div>
-            <h3 className="mb-2 text-lg font-semibold text-white">Community Driven</h3>
-            <p className="text-sm leading-relaxed text-gray-300">
-              Connect with creators and viewers in our vibrant community with comments, likes, and subscriptions.
+            <h3 className="mb-2 text-base font-semibold text-white sm:text-lg">Community Driven</h3>
+            <p className="text-xs leading-relaxed text-gray-300 sm:text-sm">
+              Connect with creators and viewers through comments, likes, and subscriptions.
             </p>
           </motion.div>
         </motion.div>
