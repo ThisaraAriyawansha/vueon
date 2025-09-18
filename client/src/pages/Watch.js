@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Heart, Share2, MessageCircle, Play, Eye, Calendar, User, Users, ChevronDown, ChevronUp } from 'lucide-react';
 
-
 const Watch = () => {
   const [video, setVideo] = useState(null);
   const [comments, setComments] = useState([]);
@@ -20,8 +19,12 @@ const Watch = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [retryCount, setRetryCount] = useState(0);
   const [videoReady, setVideoReady] = useState(false);
-    const [showFullDescription, setShowFullDescription] = useState(false);
+  const [showFullDescription, setShowFullDescription] = useState(false);
   const [commentInputFocused, setCommentInputFocused] = useState(false);
+  const [selectedQuality, setSelectedQuality] = useState('auto');
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [showQualityDropdown, setShowQualityDropdown] = useState(false);
+  const [showSpeedDropdown, setShowSpeedDropdown] = useState(false);
 
   const { id } = useParams();
   const { currentUser } = useAuth();
@@ -29,6 +32,19 @@ const Watch = () => {
   const playerRef = useRef(null);
   const isMountedRef = useRef(true);
   const abortControllerRef = useRef(null);
+
+  // Available quality options (assumed to be provided by backend or static for now)
+  const qualityOptions = [
+    { label: 'Auto', value: 'auto' }
+  ];
+
+  // Available playback speed options
+  const speedOptions = [
+    { label: '0.5x', value: 0.5 },
+    { label: '1x', value: 1 },
+    { label: '1.5x', value: 1.5 },
+    { label: '2x', value: 2 },
+  ];
 
   // Reset state when video ID changes
   useEffect(() => {
@@ -40,6 +56,8 @@ const Watch = () => {
     setRetryCount(0);
     setLoading(true);
     setVideoReady(false);
+    setSelectedQuality('auto');
+    setPlaybackSpeed(1);
   }, [id]);
 
   // Cleanup function
@@ -48,16 +66,10 @@ const Watch = () => {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
-    // Also cleanup video player if needed
     if (playerRef.current) {
       try {
-        // Try to stop the player gracefully
-        const internalPlayer = playerRef.current.getInternalPlayer();
-        if (internalPlayer && typeof internalPlayer.pause === 'function') {
-          internalPlayer.pause();
-        }
+        playerRef.current.pause();
       } catch (e) {
-        // Ignore cleanup errors
         console.log('Video player cleanup completed');
       }
     }
@@ -66,7 +78,6 @@ const Watch = () => {
   useEffect(() => {
     isMountedRef.current = true;
     
-    // Clean up previous request
     cleanup();
     abortControllerRef.current = new AbortController();
 
@@ -78,13 +89,11 @@ const Watch = () => {
 
         console.log(`Fetching video data for ID: ${id}`);
         
-        // Create axios config with timeout and signal
         const axiosConfig = {
           signal: abortControllerRef.current.signal,
-          timeout: 15000, // Increased timeout
+          timeout: 15000,
         };
 
-        // Fetch video and comments with better error handling
         const videoResponse = await axios.get(
           `http://localhost:5000/api/videos/${id}`, 
           axiosConfig
@@ -108,7 +117,7 @@ const Watch = () => {
             throw err;
           }
           console.warn('Comments fetch failed, continuing without comments:', err.message);
-          return { data: [] }; // Return empty comments if fetch fails
+          return { data: [] };
         });
 
         if (!isMountedRef.current) return;
@@ -118,12 +127,10 @@ const Watch = () => {
         setComments(commentsResponse.data);
         setLikeCount(videoResponse.data.like_count || 0);
 
-        // Construct and validate video URL - FIXED PART
         const filename = videoResponse.data.filename;
         let url = '';
         
         if (filename) {
-          // Remove 'videos/' prefix if it exists in filename
           const cleanFilename = filename.startsWith('videos/') ? filename : `videos/${filename}`;
           
           if (filename.includes('m3u8')) {
@@ -134,7 +141,6 @@ const Watch = () => {
             console.log('Direct video URL constructed:', url);
           } else {
             console.warn(`Invalid video file extension: ${filename}`);
-            // Try to construct a URL anyway
             url = `http://localhost:5000/${cleanFilename}`;
           }
         } else {
@@ -147,11 +153,10 @@ const Watch = () => {
         setVideoUrl(url);
         console.log('Final video URL:', url);
 
-        // Test video URL accessibility (optional, remove if causing issues)
         try {
           const headResponse = await axios.head(url, { 
             ...axiosConfig, 
-            timeout: 5000 // Shorter timeout for HEAD request
+            timeout: 5000 
           });
           console.log('Video URL is accessible:', { 
             status: headResponse.status, 
@@ -164,14 +169,11 @@ const Watch = () => {
               status: err.response?.status,
               url,
             });
-            // Don't set error here, let the video player handle it
           }
         }
 
-        // Fetch additional data in parallel (non-blocking)
         const additionalDataPromises = [];
 
-        // Fetch user-specific data if logged in
         if (currentUser) {
           const likePromise = axios.get(`http://localhost:5000/api/videos/${id}/like`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -191,7 +193,6 @@ const Watch = () => {
           additionalDataPromises.push(likePromise);
         }
 
-        // Fetch suggested videos
         const suggestedPromise = axios.get('http://localhost:5000/api/videos/trending', {
           signal: abortControllerRef.current.signal,
           timeout: 8000,
@@ -208,7 +209,6 @@ const Watch = () => {
         
         additionalDataPromises.push(suggestedPromise);
 
-        // Fetch subscription data
         if (videoResponse.data.user_id) {
           if (currentUser) {
             const subscribePromise = axios.get(`http://localhost:5000/api/users/subscribe/${videoResponse.data.user_id}`, {
@@ -249,7 +249,6 @@ const Watch = () => {
           additionalDataPromises.push(subscriberPromise);
         }
 
-        // Wait for all additional data (but don't block the main UI)
         Promise.allSettled(additionalDataPromises).then(() => {
           console.log('All additional data requests completed');
         });
@@ -285,7 +284,6 @@ const Watch = () => {
       }
     };
 
-    // Add a small delay to prevent rapid-fire requests
     const timeoutId = setTimeout(fetchVideoData, 100);
 
     return () => {
@@ -294,7 +292,6 @@ const Watch = () => {
     };
   }, [id, currentUser, cleanup]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
@@ -302,7 +299,6 @@ const Watch = () => {
     };
   }, [cleanup]);
 
-  // Handle video player errors with better retry logic
   const handleVideoError = useCallback((error, data, hlsInstance) => {
     if (!isMountedRef.current) return;
 
@@ -320,7 +316,6 @@ const Watch = () => {
       console.error(`HLS Error: ${data.type} - ${data.details}`);
     }
 
-    // Don't retry more than 2 times
     if (retryCount >= 2) {
       setVideoError(true);
       setError('Video playback failed. Please try refreshing the page.');
@@ -328,16 +323,13 @@ const Watch = () => {
       return;
     }
 
-    // Try different fallback strategies
     if (video && video.filename) {
       if (video.filename.includes('.m3u8') && retryCount === 0) {
-        // Try MP4 version first
         const mp4Url = `http://localhost:5000/videos/${video.filename.replace(/\.m3u8$/, '.mp4')}`;
         console.log('Trying MP4 fallback URL:', mp4Url);
         setVideoUrl(mp4Url);
         setRetryCount(prev => prev + 1);
       } else {
-        // General retry with delay
         console.log('Retrying with delay...');
         setTimeout(() => {
           if (isMountedRef.current) {
@@ -353,6 +345,34 @@ const Watch = () => {
     }
   }, [video, videoUrl, retryCount]);
 
+  const handleQualityChange = (quality) => {
+    if (!playerRef.current || !video) return;
+
+    setSelectedQuality(quality);
+    setShowQualityDropdown(false);
+
+    if (quality === 'auto') {
+      setVideoUrl(`http://localhost:5000/videos/${video.filename}`);
+    } else {
+      const qualityUrl = `http://localhost:5000/videos/${video.filename.replace(/\.m3u8$|\.mp4$/, `_${quality}.mp4`)}`;
+      console.log(`Switching to quality ${quality}:`, qualityUrl);
+      setVideoUrl(qualityUrl);
+    }
+
+    const currentTime = playerRef.current.currentTime;
+    playerRef.current.load();
+    playerRef.current.currentTime = currentTime;
+    playerRef.current.play().catch(err => console.error('Playback resume error:', err));
+  };
+
+  const handlePlaybackSpeedChange = (speed) => {
+    if (!playerRef.current) return;
+
+    setPlaybackSpeed(speed);
+    setShowSpeedDropdown(false);
+    playerRef.current.playbackRate = speed;
+    console.log(`Playback speed set to ${speed}x`);
+  };
 
   const handleSuggestedVideoClick = useCallback((videoId) => {
     console.log(`Navigating to suggested video ID: ${videoId}`);
@@ -384,7 +404,7 @@ const Watch = () => {
     } catch (error) {
       console.error('Like error:', error.message);
       setError('Failed to update like. Please try again.');
-      setTimeout(() => setError(''), 3000); // Auto-clear error
+      setTimeout(() => setError(''), 3000);
     }
   };
 
@@ -419,7 +439,7 @@ const Watch = () => {
     } catch (error) {
       console.error('Subscribe error:', error.message);
       setError('Failed to update subscription. Please try again.');
-      setTimeout(() => setError(''), 3000); // Auto-clear error
+      setTimeout(() => setError(''), 3000);
     }
   };
 
@@ -453,7 +473,7 @@ const Watch = () => {
     } catch (error) {
       console.error('Comment error:', error.message);
       setError('Failed to post comment. Please try again.');
-      setTimeout(() => setError(''), 3000); // Auto-clear error
+      setTimeout(() => setError(''), 3000);
     }
   };
 
@@ -463,7 +483,6 @@ const Watch = () => {
     setError('');
     setVideoReady(false);
     
-    // Force re-render of video player
     const currentUrl = videoUrl;
     setVideoUrl('');
     console.log('Retrying video playback with URL:', currentUrl);
@@ -475,7 +494,6 @@ const Watch = () => {
     }, 500);
   }, [videoUrl]);
 
-  // Helper functions
   const formatDuration = (seconds) => {
     if (!seconds) return '0:00';
     const mins = Math.floor(seconds / 60);
@@ -528,7 +546,6 @@ const Watch = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      
       {error && (
         <div className="fixed z-50 transform -translate-x-1/2 top-6 left-1/2 animate-slide-down">
           <div className="flex items-center px-6 py-4 space-x-3 text-red-800 border border-red-200 shadow-lg bg-red-50 rounded-2xl backdrop-blur-sm bg-opacity-95">
@@ -550,25 +567,80 @@ const Watch = () => {
       
       <div className="container px-6 py-8 mx-auto pt-28">
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-4">
-          {/* Main Video Section */}
           <div className="space-y-6 xl:col-span-3">
-            {/* Video Player */}
             <div className="relative group">
               <div className="overflow-hidden shadow-2xl bg-slate-900 rounded-3xl aspect-video">
                 {!videoError && videoUrl ? (
-                  <video 
-                    controls 
-                    width="100%" 
-                    height="100%"
-                    className="object-cover w-full h-full"
-                    onError={(e) => console.error('Video element error:', e)}
-                    onLoadStart={() => console.log('Load start')}
-                    onLoadedData={() => console.log('Loaded data')}
-                    onCanPlay={() => console.log('Can play')}
-                  >
-                    <source src={videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  <div className="relative">
+                    <video 
+                      ref={playerRef}
+                      controls 
+                      width="100%" 
+                      height="100%"
+                      className="object-cover w-full h-full"
+                      onError={(e) => console.error('Video element error:', e)}
+                      onLoadStart={() => console.log('Load start')}
+                      onLoadedData={() => console.log('Loaded data')}
+                      onCanPlay={() => console.log('Can play')}
+                    >
+                      <source src={videoUrl} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    <div className="absolute flex space-x-2 bottom-4 right-4">
+                      {/* Quality Selector */}
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowQualityDropdown(!showQualityDropdown)}
+                          className="px-3 py-1 text-sm font-medium text-white transition-colors bg-black rounded-full bg-opacity-70 hover:bg-opacity-90"
+                        >
+                          {selectedQuality.toUpperCase()}
+                        </button>
+                        {showQualityDropdown && (
+                          <div className="absolute right-0 w-24 mb-2 bg-white rounded-lg shadow-lg bottom-full">
+                            {qualityOptions.map((option) => (
+                              <button
+                                key={option.value}
+                                onClick={() => handleQualityChange(option.value)}
+                                className={`block w-full px-3 py-2 text-sm text-left transition-colors ${
+                                  selectedQuality === option.value
+                                    ? 'bg-blue-100 text-blue-600'
+                                    : 'text-slate-700 hover:bg-slate-100'
+                                }`}
+                              >
+                                {option.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {/* Playback Speed Selector */}
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowSpeedDropdown(!showSpeedDropdown)}
+                          className="px-3 py-1 text-sm font-medium text-white transition-colors bg-black rounded-full bg-opacity-70 hover:bg-opacity-90"
+                        >
+                          {playbackSpeed}x
+                        </button>
+                        {showSpeedDropdown && (
+                          <div className="absolute right-0 w-24 mb-2 bg-white rounded-lg shadow-lg bottom-full">
+                            {speedOptions.map((option) => (
+                              <button
+                                key={option.value}
+                                onClick={() => handlePlaybackSpeedChange(option.value)}
+                                className={`block w-full px-3 py-2 text-sm text-left transition-colors ${
+                                  playbackSpeed === option.value
+                                    ? 'bg-blue-100 text-blue-600'
+                                    : 'text-slate-700 hover:bg-slate-100'
+                                }`}
+                              >
+                                {option.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex items-center justify-center w-full h-full text-white">
                     <div className="space-y-4 text-center">
@@ -594,14 +666,12 @@ const Watch = () => {
               </div>
             </div>
             
-            {/* Video Info */}
             <div className="space-y-4">
               <div>
                 <h1 className="mb-3 text-xl font-bold leading-tight xl:text-2xl text-slate-900">
                   {video?.title}
                 </h1>
                 
-                {/* Stats and Actions Row */}
                 <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200">
                   <div className="flex items-center space-x-4 text-slate-600">
                     <div className="flex items-center space-x-1.5">
@@ -636,7 +706,6 @@ const Watch = () => {
                 </div>
               </div>
               
-              {/* Channel Info */}
               <div className="p-4 bg-white border shadow-md rounded-xl border-slate-200">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-3">
@@ -674,7 +743,6 @@ const Watch = () => {
                   )}
                 </div>
                 
-                {/* Description */}
                 <div className="relative">
                   <div className={`text-sm text-slate-700 leading-relaxed ${showFullDescription ? '' : 'line-clamp-3'} whitespace-pre-wrap`}>
                     {video?.description}
@@ -692,7 +760,6 @@ const Watch = () => {
               </div>
             </div>
             
-            {/* Comments Section */}
             <div className="p-6 bg-white border shadow-lg rounded-2xl border-slate-200">
               <div className="flex items-center mb-6 space-x-3">
                 <MessageCircle className="w-6 h-6 text-slate-600" />
@@ -702,35 +769,35 @@ const Watch = () => {
               </div>
               
               {currentUser && (
-                              <form onSubmit={handleCommentSubmit} className="mb-6">
-                <div className="flex space-x-3">
-                  <img
-                    src={currentUser.avatar ? `http://localhost:5000/${currentUser.avatar}` : '/default-avatar.png'}
-                    alt={currentUser.username}
-                    className="w-8 h-8 rounded-full"
-                    onError={(e) => {
-                      e.target.src = '/default-avatar.png';
-                    }}
-                  />
-                  <div className="flex-grow">
-                    <input
-                      type="text"
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      placeholder="Add a comment..."
-                      className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-highlight"
-                      maxLength={500}
+                <form onSubmit={handleCommentSubmit} className="mb-6">
+                  <div className="flex space-x-3">
+                    <img
+                      src={currentUser.avatar ? `http://localhost:5000/${currentUser.avatar}` : '/default-avatar.png'}
+                      alt={currentUser.username}
+                      className="w-8 h-8 rounded-full"
+                      onError={(e) => {
+                        e.target.src = '/default-avatar.png';
+                      }}
                     />
+                    <div className="flex-grow">
+                      <input
+                        type="text"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Add a comment..."
+                        className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-highlight"
+                        maxLength={500}
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={!newComment.trim()}
+                      className="px-4 py-2 text-white transition-colors rounded-full bg-accent hover:bg-highlight disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Comment
+                    </button>
                   </div>
-                  <button
-                    type="submit"
-                    disabled={!newComment.trim()}
-                    className="px-4 py-2 text-white transition-colors rounded-full bg-accent hover:bg-highlight disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Comment
-                  </button>
-                </div>
-              </form>
+                </form>
               )}
               
               <div className="space-y-4">
@@ -770,7 +837,6 @@ const Watch = () => {
             </div>
           </div>
           
-          {/* Suggested Videos Sidebar */}
           <div className="xl:col-span-1">
             <div className="sticky space-y-4 top-28">
               <div className="p-4 bg-white border shadow-lg rounded-xl border-slate-200">
@@ -837,14 +903,10 @@ const Watch = () => {
               </div>
             </div>
           </div>
-
-          
         </div>
       </div>
-      
-
     </div>
   );
-  };
+};
 
-export default Watch; 
+export default Watch;
