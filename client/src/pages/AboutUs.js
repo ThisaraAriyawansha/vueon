@@ -55,28 +55,28 @@ const AboutUs = () => {
       className="min-h-screen bg-gradient-to-br from-[#192f4a] to-[#003366]"
     >
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/90 to-[#005691]/90 "></div>
-        <motion.div 
-          variants={fadeIn}
-          className="container relative px-6 pt-32 pb-20 mx-auto mt-16 mb-4"
-        >
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.h1 
-              variants={slideUp}
-              className="mb-6 text-6xl font-thin tracking-tight text-white"
+          <section className="relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/90 to-[#005691]/90"></div>
+            <motion.div 
+              variants={fadeIn}
+              className="container relative px-4 pt-16 pb-12 mx-auto mt-16 mb-8 md:px-6 md:pt-32 md:pb-20 md:mt-16 md:mb-8"
             >
-              About <span className="font-semibold bg-gradient-to-r from-[#0077b6] to-[#add8e6] bg-clip-text text-transparent">Vueon</span>
-            </motion.h1>
-            <motion.p 
-              variants={slideUp}
-              className="text-xl text-[#add8e6] font-light leading-relaxed max-w-2xl mx-auto"
-            >
-              Where creativity meets community. We're building the future of content sharing, one story at a time.
-            </motion.p>
-          </div>
-        </motion.div>
-      </section>
+              <div className="max-w-3xl mx-auto text-center md:max-w-4xl">
+                <motion.h1 
+                  variants={slideUp}
+                  className="mb-4 text-3xl font-thin tracking-tight text-white md:text-6xl md:mb-6"
+                >
+                  About <span className="font-semibold bg-gradient-to-r from-[#0077b6] to-[#add8e6] bg-clip-text text-transparent">Vueon</span>
+                </motion.h1>
+                <motion.p 
+                  variants={slideUp}
+                  className="text-base text-[#add8e6] font-light leading-relaxed max-w-xl mx-auto md:text-xl md:max-w-2xl"
+                >
+                  Where creativity meets community. We're building the future of content sharing, one story at a time.
+                </motion.p>
+              </div>
+            </motion.div>
+          </section>
 
       {/* Mission Section with Image */}
       <section className="py-20 bg-white">
