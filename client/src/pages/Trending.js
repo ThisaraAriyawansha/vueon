@@ -138,22 +138,22 @@ const Trending = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-100">
         <div className="container px-6 py-12 mx-auto">
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
             <div className="relative mb-8">
               <div className="flex items-center justify-center w-16 h-16 bg-white rounded-full shadow-sm">
-                <Play className="w-6 h-6 text-gray-600" />
+                <Play className="w-6 h-6 text-blue-600" />
               </div>
             </div>
             <h2 className="mb-4 text-2xl font-light text-gray-900" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
               Vueon
             </h2>
-            <p className="max-w-md mb-8 text-center text-gray-500" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>
+            <p className="max-w-md mb-8 text-center text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>
               Loading trending content...
             </p>
             <div className="w-32 h-1 overflow-hidden bg-gray-200 rounded-full">
-              <div className="h-full bg-gray-900 animate-pulse" style={{ width: '30%' }}></div>
+              <div className="h-full bg-blue-600 animate-pulse" style={{ width: '30%' }}></div>
             </div>
           </div>
         </div>
@@ -163,14 +163,14 @@ const Trending = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-100">
         <div className="container px-6 py-12 mx-auto">
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
-            <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full shadow-sm bg-red-50">
+            <div className="flex items-center justify-center w-16 h-16 mb-4 bg-red-100 rounded-full shadow-sm">
               <div className="w-6 h-6 bg-red-500 rounded-full"></div>
             </div>
-            <div className="text-lg font-light text-center text-red-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>{error}</div>
-            <p className="mt-2 text-gray-500" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Please try again later</p>
+            <div className="text-lg font-light text-center text-red-500" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>{error}</div>
+            <p className="mt-2 text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Please try again later</p>
           </div>
         </div>
       </div>
@@ -178,7 +178,7 @@ const Trending = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       {/* Header Section */}
       <div
         className="relative w-full h-[400px] md:h-[500px] flex items-center justify-center text-center bg-cover bg-center overflow-hidden"
@@ -189,9 +189,8 @@ const Trending = () => {
           backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         }}
       >
-        {/* Animated overlay */}
         <div 
-          className="absolute inset-0 bg-black/30"
+          className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/20"
           id="animate-overlay"
           style={{
             transition: 'opacity 1.2s ease-out',
@@ -201,23 +200,22 @@ const Trending = () => {
 
         <div className="relative z-10 max-w-4xl px-6 mx-auto mt-8">
           <div className="space-y-6">
-            {/* Subtitle with fade-in and slide-up */}
             <p
               id="animate-subtitle"
-              className="text-sm font-medium tracking-wider text-white uppercase md:text-base opacity-90"
+              className="text-sm font-medium tracking-widest text-white uppercase opacity-80"
               style={{
                 transition: 'all 0.8s ease-out',
                 opacity: isVisible['animate-subtitle'] ? 1 : 0,
-                transform: isVisible['animate-subtitle'] ? 'translateY(0)' : 'translateY(20px)'
+                transform: isVisible['animate-subtitle'] ? 'translateY(0)' : 'translateY(20px)',
+                fontFamily: "'SF Pro Text', sans-serif"
               }}
             >
               Discover What's Hot
             </p>
             
-            {/* Animated divider line */}
             <div 
               id="animate-divider"
-              className="w-16 h-px mx-auto bg-white/40"
+              className="w-12 h-px mx-auto bg-blue-400/50"
               style={{
                 transition: 'all 1s ease-out 0.3s',
                 opacity: isVisible['animate-divider'] ? 1 : 0,
@@ -226,27 +224,27 @@ const Trending = () => {
               }}
             ></div>
             
-            {/* Main title with staggered animation */}
             <h1
               id="animate-title"
               className="text-4xl font-light tracking-tight text-white md:text-5xl lg:text-6xl"
               style={{
                 transition: 'all 1s ease-out 0.6s',
                 opacity: isVisible['animate-title'] ? 1 : 0,
-                transform: isVisible['animate-title'] ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.95)'
+                transform: isVisible['animate-title'] ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.95)',
+                fontFamily: "'SF Pro Display', sans-serif"
               }}
             >
               Trending Videos
             </h1>
             
-            {/* Description text with fade-in */}
             <p
               id="animate-description"
-              className="max-w-2xl mx-auto text-lg font-light text-white md:text-xl opacity-95"
+              className="max-w-2xl mx-auto text-lg font-light text-white/90"
               style={{
                 transition: 'all 1s ease-out 0.9s',
                 opacity: isVisible['animate-description'] ? 1 : 0,
-                transform: isVisible['animate-description'] ? 'translateY(0)' : 'translateY(20px)'
+                transform: isVisible['animate-description'] ? 'translateY(0)' : 'translateY(20px)',
+                fontFamily: "'SF Pro Text', sans-serif"
               }}
             >
               Explore the most popular videos trending right now. Stay updated with the latest content that's capturing everyone's attention.
@@ -260,11 +258,11 @@ const Trending = () => {
         {/* Search and Filter Bar */}
         <div className="flex flex-col mb-8 md:flex-row md:items-center md:justify-between">
           <div className="relative flex-1 mb-4 md:mb-0 md:max-w-md">
-            <Search className="absolute w-5 h-5 text-gray-500 transform -translate-y-1/2 left-3 top-1/2" />
+            <Search className="absolute w-5 h-5 text-blue-600 transform -translate-y-1/2 left-3 top-1/2" />
             <input
               type="text"
               placeholder="Search trending videos..."
-              className="w-full py-3 pl-10 pr-4 bg-white shadow-sm rounded-2xl focus:ring-2 focus:ring-gray-300 focus:outline-none"
+              className="w-full py-3 pl-10 pr-4 bg-white shadow-sm rounded-2xl focus:ring-2 focus:ring-blue-300 focus:outline-none"
               value={searchQuery}
               onChange={handleSearch}
               style={{ fontFamily: "'SF Pro Text', sans-serif" }}
@@ -273,17 +271,17 @@ const Trending = () => {
           
           <div className="flex items-center space-x-4">
             <button 
-              className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white shadow-sm rounded-2xl md:hidden hover:bg-gray-100"
+              className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 shadow-sm rounded-2xl md:hidden hover:bg-blue-700"
               onClick={() => setShowFilters(!showFilters)}
               style={{ fontFamily: "'SF Pro Text', sans-serif" }}
             >
-              <Filter className="w-4 h-4 mr-2 text-gray-600" />
+              <Filter className="w-4 h-4 mr-2 text-white" />
               Filters
             </button>
             
             <div className="items-center hidden space-x-2 md:flex">
               <select 
-                className="px-4 py-2 text-sm bg-white shadow-sm rounded-2xl focus:ring-2 focus:ring-gray-300 focus:outline-none"
+                className="px-4 py-2 text-sm bg-white shadow-sm rounded-2xl focus:ring-2 focus:ring-blue-300 focus:outline-none"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 style={{ fontFamily: "'SF Pro Text', sans-serif" }}
@@ -294,7 +292,7 @@ const Trending = () => {
               </select>
               
               <select 
-                className="px-4 py-2 text-sm bg-white shadow-sm rounded-2xl focus:ring-2 focus:ring-gray-300 focus:outline-none"
+                className="px-4 py-2 text-sm bg-white shadow-sm rounded-2xl focus:ring-2 focus:ring-blue-300 focus:outline-none"
                 value={timeFilter}
                 onChange={(e) => setTimeFilter(e.target.value)}
                 style={{ fontFamily: "'SF Pro Text', sans-serif" }}
@@ -317,7 +315,7 @@ const Trending = () => {
                   Filters
                 </h3>
                 <button 
-                  className="text-sm text-gray-600 hover:text-gray-900"
+                  className="text-sm text-blue-600 hover:text-blue-800"
                   onClick={clearFilters}
                   style={{ fontFamily: "'SF Pro Text', sans-serif" }}
                 >
@@ -337,7 +335,7 @@ const Trending = () => {
                       value="all"
                       checked={selectedCategory === 'all'}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-4 h-4 mr-2 text-gray-900 accent-gray-900"
+                      className="w-4 h-4 mr-2 text-blue-600 accent-blue-600"
                     />
                     <span style={{ fontFamily: "'SF Pro Text', sans-serif" }}>All Categories</span>
                   </label>
@@ -350,7 +348,7 @@ const Trending = () => {
                         value={category}
                         checked={selectedCategory === category}
                         onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="w-4 h-4 mr-2 text-gray-900 accent-gray-900"
+                        className="w-4 h-4 mr-2 text-blue-600 accent-blue-600"
                       />
                       <span style={{ fontFamily: "'SF Pro Text', sans-serif" }}>{category}</span>
                     </label>
@@ -363,7 +361,7 @@ const Trending = () => {
                   Sort By
                 </h4>
                 <select 
-                  className="w-full px-3 py-2 bg-white shadow-sm rounded-xl focus:ring-2 focus:ring-gray-300 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white shadow-sm rounded-xl focus:ring-2 focus:ring-blue-300 focus:outline-none"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   style={{ fontFamily: "'SF Pro Text', sans-serif" }}
@@ -379,7 +377,7 @@ const Trending = () => {
                   Time Period
                 </h4>
                 <select 
-                  className="w-full px-3 py-2 bg-white shadow-sm rounded-xl focus:ring-2 focus:ring-gray-300 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white shadow-sm rounded-xl focus:ring-2 focus:ring-blue-300 focus:outline-none"
                   value={timeFilter}
                   onChange={(e) => setTimeFilter(e.target.value)}
                   style={{ fontFamily: "'SF Pro Text', sans-serif" }}
@@ -399,42 +397,42 @@ const Trending = () => {
             <div className="grid grid-cols-1 gap-5 mb-12 md:grid-cols-3">
               <div className="p-5 transition-shadow duration-200 bg-white shadow-sm rounded-2xl hover:shadow-md">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
-                    <TrendingUp className="w-5 h-5 text-gray-600" />
+                  <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                    <TrendingUp className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="text-xl font-medium text-gray-900" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
                       {videos.reduce((sum, video) => sum + video.views, 0).toLocaleString()}
                     </h3>
-                    <p className="text-gray-500" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Total Views</p>
+                    <p className="text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Total Views</p>
                   </div>
                 </div>
               </div>
               
               <div className="p-5 transition-shadow duration-200 bg-white shadow-sm rounded-2xl hover:shadow-md">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
-                    <Play className="w-5 h-5 text-gray-600 fill-current" />
+                  <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                    <Play className="w-5 h-5 text-blue-600 fill-current" />
                   </div>
                   <div>
                     <h3 className="text-xl font-medium text-gray-900" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
                       {videos.length}
                     </h3>
-                    <p className="text-gray-500" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Trending Videos</p>
+                    <p className="text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Trending Videos</p>
                   </div>
                 </div>
               </div>
               
               <div className="p-5 transition-shadow duration-200 bg-white shadow-sm rounded-2xl hover:shadow-md">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
-                    <Heart className="w-5 h-5 text-gray-600" />
+                  <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                    <Heart className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="text-xl font-medium text-gray-900" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
                       {videos.reduce((sum, video) => sum + video.like_count, 0).toLocaleString()}
                     </h3>
-                    <p className="text-gray-500" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Total Likes</p>
+                    <p className="text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Total Likes</p>
                   </div>
                 </div>
               </div>
@@ -442,7 +440,7 @@ const Trending = () => {
 
             {/* Results Count */}
             <div className="mb-6">
-              <p className="text-gray-500" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>
+              <p className="text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>
                 Showing {filteredVideos.length} of {videos.length} videos
                 {searchQuery && ` for "${searchQuery}"`}
                 {selectedCategory !== 'all' && ` in ${selectedCategory}`}
@@ -452,17 +450,17 @@ const Trending = () => {
             {/* Videos Grid */}
             {filteredVideos.length === 0 ? (
               <div className="py-16 text-center">
-                <div className="flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full shadow-sm">
-                  <Search className="w-8 h-8 text-gray-500" />
+                <div className="flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-blue-100 rounded-full shadow-sm">
+                  <Search className="w-8 h-8 text-blue-600" />
                 </div>
                 <h3 className="mb-2 text-lg font-medium text-gray-900" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
                   No videos found
                 </h3>
-                <p className="text-gray-500" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>
+                <p className="text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>
                   Try adjusting your search or filters
                 </p>
                 <button 
-                  className="px-4 py-2 mt-4 text-gray-900 bg-white shadow-sm rounded-xl hover:bg-gray-100"
+                  className="px-4 py-2 mt-4 text-white bg-blue-600 shadow-sm rounded-xl hover:bg-blue-700"
                   onClick={clearFilters}
                   style={{ fontFamily: "'SF Pro Text', sans-serif" }}
                 >
