@@ -78,198 +78,198 @@ const AboutUs = () => {
             </motion.div>
           </section>
 
-      {/* Mission Section with Image */}
-      <section className="py-20 bg-white">
-        <div className="container px-6 mx-auto">
-          <motion.div 
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid items-center max-w-6xl gap-16 mx-auto lg:grid-cols-2"
-          >
-            <motion.div variants={slideUp}>
-              <h2 className="text-4xl font-light text-[#192f4a] mb-6">Our Mission</h2>
-              <p className="mb-6 text-lg leading-relaxed text-gray-600">
-                At Vueon, we believe every creator has a unique voice that deserves to be heard. 
-                We're building more than a platform – we're crafting a movement that celebrates 
-                human creativity in all its forms.
-              </p>
-              <p className="text-lg leading-relaxed text-gray-600">
-                From the bedroom producer to the seasoned filmmaker, from the weekend hobbyist 
-                to the professional artist – Vueon is where your story finds its audience.
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={slideUp}
-              className="relative"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <div className="aspect-square bg-gradient-to-br from-[#0077b6] to-[#005691] rounded-3xl p-16 flex items-center justify-center">
-                <div className="text-center">
-                  <motion.div 
-                    className="flex items-center justify-center w-20 h-20 mx-auto mb-6 rounded-full bg-white/20"
-                    animate={pulseAnimation}
-                  >
-                    <Heart className="w-10 h-10 text-white" />
-                  </motion.div>
-                  <h3 className="mb-4 text-2xl font-light text-white">Connecting Hearts</h3>
-                  <p className="text-[#add8e6] font-light">Through shared creativity</p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-16 bg-[#192f4a]">
-        <div className="container px-6 mx-auto">
-          <motion.div 
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid max-w-4xl gap-12 mx-auto md:grid-cols-3"
-          >
-            <motion.div variants={slideUp} className="text-center">
-              <motion.div 
-                className="text-5xl font-thin text-[#add8e6] mb-4"
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ type: "spring", stiffness: 100 }}
-              >100K+</motion.div>
-              <div className="font-light text-white">Creators</div>
-            </motion.div>
-            <motion.div variants={slideUp} className="text-center">
-              <motion.div 
-                className="text-5xl font-thin text-[#add8e6] mb-4"
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
-              >1M+</motion.div>
-              <div className="font-light text-white">Videos Shared</div>
-            </motion.div>
-            <motion.div variants={slideUp} className="text-center">
-              <motion.div 
-                className="text-5xl font-thin text-[#add8e6] mb-4"
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
-              >50+</motion.div>
-              <div className="font-light text-white">Countries</div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* What We Do Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-        <div className="container px-6 mx-auto">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              variants={slideUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="mb-16 text-center"
-            >
-              <h2 className="text-4xl font-light text-[#192f4a] mb-6">What We Do</h2>
-              <p className="max-w-2xl mx-auto text-xl font-light text-gray-600">
-                We've reimagined content sharing from the ground up, focusing on what matters most: your creative expression.
-              </p>
-            </motion.div>
-            
+              {/* Mission Section with Image */}
+        <section className="py-12 bg-white md:py-20">
+          <div className="container px-4 mx-auto md:px-6">
             <motion.div 
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="grid gap-8 md:grid-cols-3"
+              className="grid items-center max-w-4xl gap-8 mx-auto md:gap-12 lg:grid-cols-2 lg:max-w-6xl"
             >
-              {/* Feature 1 */}
-              <motion.div variants={slideUp} className="text-center group">
-                <motion.div 
-                  className="w-24 h-24 bg-gradient-to-br from-[#0077b6] to-[#005691] rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                >
-                  <Upload className="w-12 h-12 text-white" />
-                </motion.div>
-                <h3 className="text-2xl font-light text-[#192f4a] mb-4">Seamless Upload</h3>
-                <p className="leading-relaxed text-gray-600">
-                  Drag, drop, done. Our intelligent system handles the rest, from compression to thumbnail generation.
+              <motion.div variants={slideUp}>
+                <h2 className="text-2xl font-light text-[#192f4a] mb-4 md:text-4xl md:mb-6">Our Mission</h2>
+                <p className="mb-4 text-sm leading-relaxed text-gray-600 md:text-lg md:mb-6">
+                  At Vueon, we believe every creator has a unique voice that deserves to be heard. 
+                  We're building more than a platform – we're crafting a movement that celebrates 
+                  human creativity in all its forms.
+                </p>
+                <p className="text-sm leading-relaxed text-gray-600 md:text-lg">
+                  From the bedroom producer to the seasoned filmmaker, from the weekend hobbyist 
+                  to the professional artist – Vueon is where your story finds its audience.
                 </p>
               </motion.div>
-
-              {/* Feature 2 */}
-              <motion.div variants={slideUp} className="text-center group">
-                <motion.div 
-                  className="w-24 h-24 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                >
-                  <Play className="w-12 h-12 text-white" />
-                </motion.div>
-                <h3 className="text-2xl font-light text-[#192f4a] mb-4">Discover Magic</h3>
-                <p className="leading-relaxed text-gray-600">
-                  Our AI-powered recommendation engine learns what you love and serves up content that inspires.
-                </p>
-              </motion.div>
-
-              {/* Feature 3 */}
-              <motion.div variants={slideUp} className="text-center group">
-                <motion.div 
-                  className="w-24 h-24 bg-gradient-to-br from-[#0077b6] to-[#add8e6] rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                >
-                  <Users className="w-12 h-12 text-white" />
-                </motion.div>
-                <h3 className="text-2xl font-light text-[#192f4a] mb-4">Build Community</h3>
-                <p className="leading-relaxed text-gray-600">
-                  Connect with creators who share your passions. Collaborate, learn, and grow together.
-                </p>
+              <motion.div 
+                variants={slideUp}
+                className="relative"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="aspect-square bg-gradient-to-br from-[#0077b6] to-[#005691] rounded-2xl p-8 flex items-center justify-center md:p-16 md:rounded-3xl">
+                  <div className="text-center">
+                    <motion.div 
+                      className="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 md:w-20 md:h-20 md:mb-6"
+                      animate={pulseAnimation}
+                    >
+                      <Heart className="w-8 h-8 text-white md:w-10 md:h-10" />
+                    </motion.div>
+                    <h3 className="mb-3 text-lg font-light text-white md:text-2xl md:mb-4">Connecting Hearts</h3>
+                    <p className="text-[#add8e6] text-sm font-light md:text-base">Through shared creativity</p>
+                  </div>
+                </div>
               </motion.div>
             </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
+
+              {/* Stats Section */}
+        <section className="py-8 bg-[#192f4a] md:py-16">
+          <div className="container px-4 mx-auto md:px-6">
+            <motion.div 
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid max-w-xl grid-cols-1 gap-8 mx-auto md:grid-cols-3 md:gap-12 md:max-w-4xl"
+            >
+              <motion.div variants={slideUp} className="text-center">
+                <motion.div 
+                  className="text-3xl font-thin text-[#add8e6] mb-3 md:text-5xl md:mb-4"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ type: "spring", stiffness: 100 }}
+                >100K+</motion.div>
+                <div className="text-sm font-light text-white md:text-base">Creators</div>
+              </motion.div>
+              <motion.div variants={slideUp} className="text-center">
+                <motion.div 
+                  className="text-3xl font-thin text-[#add8e6] mb-3 md:text-5xl md:mb-4"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
+                >1M+</motion.div>
+                <div className="text-sm font-light text-white md:text-base">Videos Shared</div>
+              </motion.div>
+              <motion.div variants={slideUp} className="text-center">
+                <motion.div 
+                  className="text-3xl font-thin text-[#add8e6] mb-3 md:text-5xl md:mb-4"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+                >50+</motion.div>
+                <div className="text-sm font-light text-white md:text-base">Countries</div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+                {/* What We Do Section */}
+          <section className="py-12 bg-gradient-to-b from-white to-gray-50 md:py-20">
+            <div className="container px-4 mx-auto md:px-6">
+              <div className="max-w-4xl mx-auto md:max-w-6xl">
+                <motion.div 
+                  variants={slideUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  className="mb-8 text-center md:mb-16"
+                >
+                  <h2 className="text-2xl font-light text-[#192f4a] mb-4 md:text-4xl md:mb-6">What We Do</h2>
+                  <p className="max-w-xl mx-auto text-sm font-light text-gray-600 md:text-xl md:max-w-2xl">
+                    We've reimagined content sharing from the ground up, focusing on what matters most: your creative expression.
+                  </p>
+                </motion.div>
+                
+                <motion.div 
+                  variants={staggerContainer}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  className="grid gap-6 md:grid-cols-3 md:gap-8"
+                >
+                  {/* Feature 1 */}
+                  <motion.div variants={slideUp} className="text-center group">
+                    <motion.div 
+                      className="w-16 h-16 bg-gradient-to-br from-[#0077b6] to-[#005691] rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform duration-300 md:w-24 md:h-24 md:mb-6 md:rounded-3xl md:group-hover:scale-110"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                    >
+                      <Upload className="w-8 h-8 text-white md:w-12 md:h-12" />
+                    </motion.div>
+                    <h3 className="text-xl font-light text-[#192f4a] mb-3 md:text-2xl md:mb-4">Seamless Upload</h3>
+                    <p className="text-xs leading-relaxed text-gray-600 md:text-base">
+                      Drag, drop, done. Our intelligent system handles the rest, from compression to thumbnail generation.
+                    </p>
+                  </motion.div>
+
+                  {/* Feature 2 */}
+                  <motion.div variants={slideUp} className="text-center group">
+                    <motion.div 
+                      className="w-16 h-16 bg-gradient-to-br from-[#005691] to-[#0077b6] rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform duration-300 md:w-24 md:h-24 md:mb-6 md:rounded-3xl md:group-hover:scale-110"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                    >
+                      <Play className="w-8 h-8 text-white md:w-12 md:h-12" />
+                    </motion.div>
+                    <h3 className="text-xl font-light text-[#192f4a] mb-3 md:text-2xl md:mb-4">Discover Magic</h3>
+                    <p className="text-xs leading-relaxed text-gray-600 md:text-base">
+                      Our AI-powered recommendation engine learns what you love and serves up content that inspires.
+                    </p>
+                  </motion.div>
+
+                  {/* Feature 3 */}
+                  <motion.div variants={slideUp} className="text-center group">
+                    <motion.div 
+                      className="w-16 h-16 bg-gradient-to-br from-[#0077b6] to-[#add8e6] rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform duration-300 md:w-24 md:h-24 md:mb-6 md:rounded-3xl md:group-hover:scale-110"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                    >
+                      <Users className="w-8 h-8 text-white md:w-12 md:h-12" />
+                    </motion.div>
+                    <h3 className="text-xl font-light text-[#192f4a] mb-3 md:text-2xl md:mb-4">Build Community</h3>
+                    <p className="text-xs leading-relaxed text-gray-600 md:text-base">
+                      Connect with creators who share your passions. Collaborate, learn, and grow together.
+                    </p>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </div>
+          </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-[#005691] to-[#0077b6]">
-        <div className="container px-6 mx-auto">
-          <motion.div 
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto text-center"
-          >
-            <motion.h2 variants={slideUp} className="mb-6 text-4xl font-light text-white">Join the Movement</motion.h2>
-            <motion.p variants={slideUp} className="text-xl text-[#add8e6] font-light mb-10 leading-relaxed">
-              Ready to be part of something bigger? Your creative journey starts here.
-            </motion.p>
-            
-            <motion.div variants={slideUp} className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Link
-                to="/register"
-                className="group inline-flex items-center px-8 py-4 bg-white text-[#005691] rounded-full font-medium hover:bg-gray-100 transition-all duration-300"
-              >
-                Start Creating
-                <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link
-                to="/login"
-                className="inline-flex items-center px-8 py-4 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:text-[#005691] transition-all duration-300"
-              >
-                Sign In
-              </Link>
-            </motion.div>
+    <section className="py-12 bg-gradient-to-r from-[#005691] to-[#0077b6] md:py-20">
+      <div className="container px-4 mx-auto md:px-6">
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="max-w-3xl mx-auto text-center md:max-w-4xl"
+        >
+          <motion.h2 variants={slideUp} className="mb-4 text-2xl font-light text-white md:text-4xl md:mb-6">Join the Movement</motion.h2>
+          <motion.p variants={slideUp} className="text-sm text-[#add8e6] font-light mb-6 leading-relaxed md:text-xl md:mb-10">
+            Ready to be part of something bigger? Your creative journey starts here.
+          </motion.p>
+          
+          <motion.div variants={slideUp} className="flex flex-col justify-center gap-3 sm:flex-row md:gap-4">
+            <Link
+              to="/register"
+              className="group inline-flex items-center px-6 py-2.5 text-sm bg-white text-[#005691] rounded-full font-medium hover:bg-gray-100 transition-all duration-300 md:px-8 md:py-4 md:text-base"
+            >
+              Start Creating
+              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1 md:w-5 md:h-5" />
+            </Link>
+            <Link
+              to="/login"
+              className="inline-flex items-center px-6 py-2.5 text-sm border-2 border-white text-white rounded-full font-medium hover:bg-white hover:text-[#005691] transition-all duration-300 md:px-8 md:py-4 md:text-base"
+            >
+              Sign In
+            </Link>
           </motion.div>
-        </div>
-      </section>
+        </motion.div>
+      </div>
+    </section>
 
          <section className="relative py-16 bg-white md:py-32">
       <div className="container px-4 mx-auto sm:px-6">
