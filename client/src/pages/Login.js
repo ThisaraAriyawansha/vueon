@@ -87,7 +87,7 @@ const Login = () => {
       variants={containerVariants}
       className="flex items-center justify-center min-h-screen px-4 py-8 mt-16 sm:px-6 lg:px-8"
     >
-      <div className="w-full max-w-4xl mt-4 md:mt-8">
+      <div className="w-full max-w-4xl mt-2 md:mt-2">
         <motion.div 
           variants={itemVariants}
           className="overflow-hidden bg-white shadow-2xl rounded-2xl"
