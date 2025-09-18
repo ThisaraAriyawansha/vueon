@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Trending from './pages/Trending';
 import About from './pages/AboutUs';
+import Contact from './pages/Contact';
 import './index.css';
 
 // ScrollToTop component that will handle scrolling to top on route change
@@ -39,6 +40,7 @@ function App() {
               <Route path="/watch/:id" element={<Watch />} />
               <Route path="/login" element={<Login />} />
               <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/register" element={<Register />} />
               <Route path="/profile/:id" element={<Profile />} />
             </Routes>

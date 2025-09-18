@@ -94,6 +94,9 @@ const Navbar = () => {
                 <Link to="/about" className="text-sm text-white transition-colors duration-300 hover:text-gray-300">
                   About Us
                 </Link>
+                <Link to="/contact" className="text-sm text-white transition-colors duration-300 hover:text-gray-300">
+                  Contact Us
+                </Link>
                 {currentUser ? (
                   <div className="flex items-center space-x-4">
                     <Link
@@ -163,6 +166,9 @@ const Navbar = () => {
                 </Link>
                 <Link to="/about" className="text-sm text-white transition-colors duration-300 hover:text-gray-300">
                   About Us
+                </Link>
+                <Link to="/contact" className="text-sm text-white transition-colors duration-300 hover:text-gray-300">
+                  Contact Us
                 </Link>
                 {currentUser ? (
                   <div className="flex items-center space-x-4">
@@ -263,6 +269,20 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Trending
+              </Link>
+              <Link
+                to="/about"
+                className="text-sm text-white transition-colors hover:text-gray-300"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About Us
+              </Link>
+              <Link
+                to="/contact"
+                className="text-sm text-white transition-colors hover:text-gray-300"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact Us
               </Link>
               {currentUser ? (
                 <>
