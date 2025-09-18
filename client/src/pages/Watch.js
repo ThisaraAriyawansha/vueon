@@ -772,49 +772,49 @@ const Watch = () => {
           
           {/* Suggested Videos Sidebar */}
           <div className="xl:col-span-1">
-            <div className="sticky space-y-6 top-28">
-              <div className="p-6 bg-white border shadow-lg rounded-2xl border-slate-200">
-                <h2 className="flex items-center mb-6 space-x-2 text-xl font-bold text-slate-900">
-                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"></div>
+            <div className="sticky space-y-4 top-28">
+              <div className="p-4 bg-white border shadow-lg rounded-xl border-slate-200">
+                <h2 className="flex items-center mb-4 space-x-2 text-lg font-bold text-slate-900">
+                  <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"></div>
                   <span>Up Next</span>
                 </h2>
                 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {suggestedVideos.map((suggestedVideo, index) => (
                     <div
                       key={suggestedVideo.id}
                       className={`group cursor-pointer animate-slide-in`}
-                      style={{animationDelay: `${index * 0.1}s`}}
+                      style={{animationDelay: `${index * 0.08}s`}}
                       onClick={() => handleSuggestedVideoClick(suggestedVideo.id)}
                     >
-                      <div className="flex space-x-3 p-3 rounded-xl hover:bg-slate-50 transition-all duration-300 transform hover:scale-[1.02]">
-                        <div className="relative flex-shrink-0 w-40 h-24 overflow-hidden bg-slate-200 rounded-xl">
+                      <div className="flex space-x-2 p-2 rounded-lg hover:bg-slate-50 transition-all duration-200 transform hover:scale-[1.01]">
+                        <div className="relative flex-shrink-0 w-32 h-20 overflow-hidden rounded-lg bg-slate-200">
                           <img
                             src={suggestedVideo.thumbnail ? `http://localhost:5000/${suggestedVideo.thumbnail}` : '/default-thumbnail.jpg'}
                             alt={suggestedVideo.title}
-                            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
                             onError={(e) => {
                               e.target.src = '/default-thumbnail.jpg';
                             }}
                           />
-                          <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-0 group-hover:bg-opacity-20">
-                            <Play className="w-6 h-6 text-white transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
+                          <div className="absolute inset-0 flex items-center justify-center transition-all duration-200 bg-black bg-opacity-0 group-hover:bg-opacity-20">
+                            <Play className="w-4 h-4 text-white transition-opacity duration-200 opacity-0 group-hover:opacity-100" />
                           </div>
-                          <div className="absolute px-2 py-1 text-xs font-medium text-white bg-black rounded-lg bottom-2 right-2 bg-opacity-80">
+                          <div className="absolute px-1 py-0.5 text-[10px] font-medium text-white bg-black rounded-md bottom-1 right-1 bg-opacity-80">
                             {formatDuration(suggestedVideo.duration)}
                           </div>
                         </div>
-                        <div className="flex-1 min-w-0 space-y-1">
-                          <h4 className="text-sm font-semibold leading-tight transition-colors text-slate-900 line-clamp-2 group-hover:text-blue-600">
+                        <div className="flex-1 min-w-0 space-y-0.5">
+                          <h4 className="text-xs font-semibold leading-tight transition-colors text-slate-900 line-clamp-2 group-hover:text-blue-600">
                             {suggestedVideo.title}
                           </h4>
-                          <div className="flex items-center space-x-1 text-xs text-slate-500">
-                            <User className="w-3 h-3" />
+                          <div className="flex items-center space-x-1 text-[10px] text-slate-500">
+                            <User className="w-2 h-2" />
                             <span className="truncate">{suggestedVideo.username}</span>
                           </div>
-                          <div className="flex items-center space-x-2 text-xs text-slate-400">
+                          <div className="flex items-center space-x-1.5 text-[10px] text-slate-400">
                             <div className="flex items-center space-x-1">
-                              <Eye className="w-3 h-3" />
+                              <Eye className="w-2 h-2" />
                               <span>{formatViews(suggestedVideo.views)}</span>
                             </div>
                             <span>•</span>
@@ -826,17 +826,19 @@ const Watch = () => {
                   ))}
                   
                   {suggestedVideos.length === 0 && (
-                    <div className="py-8 text-center">
-                      <div className="flex items-center justify-center w-12 h-12 mx-auto mb-3 rounded-full bg-slate-100">
-                        <Play className="w-6 h-6 text-slate-400" />
+                    <div className="py-6 text-center">
+                      <div className="flex items-center justify-center w-10 h-10 mx-auto mb-2 rounded-full bg-slate-100">
+                        <Play className="w-4 h-4 text-slate-400" />
                       </div>
-                      <p className="text-sm text-slate-500">No suggested videos available</p>
+                      <p className="text-xs text-slate-500">No suggested videos available</p>
                     </div>
                   )}
                 </div>
               </div>
             </div>
           </div>
+
+          
         </div>
       </div>
       

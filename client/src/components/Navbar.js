@@ -174,7 +174,7 @@ const Navbar = () => {
                   <div className="flex items-center space-x-4">
                     <Link
                       to="/upload"
-                      className="px-4 py-2 text-sm text-white transition-colors rounded-lg hover:text-gray-300"
+                      className="py-2 text-sm text-white transition-colors rounded-lg  hover:text-gray-300"
                     >
                       Upload
                     </Link>

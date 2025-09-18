@@ -7,6 +7,7 @@ import VideoSection from './HomeComponent/VideoSection';
 import LogoSection from './HomeComponent/LogoSection';
 import VueonVideo from "../assets/video/Generated File September 18, 2025 - 9_00AM.mp4";
 import {  Upload, Users, TrendingUp,  Shield, Zap, Globe,  ArrowRight, CheckCircle, BarChart3, Heart, Eye } from 'lucide-react';
+import Banner from './HomeComponent/Banner';
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
@@ -138,6 +139,8 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <Banner/>
 
       {/* Features Showcase */}
       <section className="py-20 bg-gray-50">
