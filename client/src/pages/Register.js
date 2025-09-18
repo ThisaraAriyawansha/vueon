@@ -91,35 +91,35 @@ const Register = () => {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="flex items-center justify-center min-h-screen px-4 py-12 bg-white sm:px-6 lg:px-8"
+      className="flex items-center justify-center min-h-screen px-4 py-8 bg-white sm:px-6 lg:px-8"
     >
-      <div className="w-full max-w-4xl mt-24">
+      <div className="w-full max-w-4xl mt-16 md:mt-24">
         <motion.div 
           variants={scaleIn}
           className="overflow-hidden bg-white shadow-2xl rounded-2xl"
         >
-          <div className="flex">
+          <div className="flex flex-col md:flex-row">
             {/* Left Side - Logo with Blurred Background */}
-            <div className="relative flex-1 overflow-hidden bg-gradient-to-br from-[#192f4a] via-[#003366] to-[#005691] min-h-96">
+            <div className="relative flex-1 overflow-hidden bg-gradient-to-br from-[#192f4a] via-[#003366] to-[#005691] min-h-64 md:min-h-96">
               {/* Animated background elements */}
               <div className="absolute inset-0">
                 <motion.div 
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 0.1 }}
                   transition={{ duration: 1.5, delay: 0.2 }}
-                  className="absolute w-48 h-48 rounded-full top-1/4 left-1/4 bg-white/10 blur-3xl"
+                  className="absolute w-32 h-32 rounded-full md:w-48 md:h-48 top-1/4 left-1/4 bg-white/10 blur-3xl"
                 ></motion.div>
                 <motion.div 
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 0.2 }}
                   transition={{ duration: 1.5, delay: 0.4 }}
-                  className="absolute w-64 h-64 rounded-full bottom-1/3 right-1/4 bg-purple-400/20 blur-3xl"
+                  className="absolute w-40 h-40 rounded-full md:w-64 md:h-64 bottom-1/3 right-1/4 bg-purple-400/20 blur-3xl"
                 ></motion.div>
                 <motion.div 
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 0.15 }}
                   transition={{ duration: 1.5, delay: 0.6 }}
-                  className="absolute w-40 h-40 transform -translate-x-1/2 -translate-y-1/2 rounded-full top-1/2 left-1/2 bg-blue-400/15 blur-2xl"
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2 rounded-full w-28 h-28 md:w-40 md:h-40 top-1/2 left-1/2 bg-blue-400/15 blur-2xl"
                 ></motion.div>
               </div>
               
@@ -132,15 +132,15 @@ const Register = () => {
               ></motion.div>
               
               {/* Logo and Content */}
-              <div className="relative z-10 flex flex-col items-center justify-center h-full px-8 py-16 text-center">
+              <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 py-12 text-center md:px-8 md:py-16">
                 <motion.div 
                   variants={fadeInUp}
-                  className="mb-6"
+                  className="mb-4 md:mb-6"
                 >
                   <motion.img 
                     src={LogoImage} 
                     alt="Vueon Logo" 
-                    className="w-24 h-24 mx-auto mb-4 drop-shadow-2xl"
+                    className="w-16 h-16 mx-auto mb-2 md:w-24 md:h-24 md:mb-4 drop-shadow-2xl"
                     whileHover={{ 
                       scale: 1.05,
                       transition: { duration: 0.3 } 
@@ -149,13 +149,13 @@ const Register = () => {
                 </motion.div>
                 <motion.h1 
                   variants={fadeInUp}
-                  className="mb-4 text-3xl font-light leading-relaxed text-white drop-shadow-lg"
+                  className="mb-2 text-xl font-light leading-relaxed text-white md:text-3xl drop-shadow-lg"
                 >
                   Join Vueon
                 </motion.h1>
                 <motion.p 
                   variants={fadeInUp}
-                  className="max-w-sm text-lg font-light leading-relaxed text-white/90 drop-shadow-md"
+                  className="max-w-xs text-sm font-light leading-relaxed text-white/90 md:text-lg md:max-w-sm drop-shadow-md"
                 >
                   Start your journey with innovative digital solutions
                 </motion.p>
@@ -163,16 +163,16 @@ const Register = () => {
             </div>
 
             {/* Right Side - Register Form */}
-            <div className="flex items-center justify-center flex-1 px-8 py-16 bg-white">
-              <div className="w-full max-w-sm space-y-8">
+            <div className="flex items-center justify-center flex-1 px-4 py-8 bg-white md:px-8 md:py-16">
+              <div className="w-full max-w-sm space-y-6 md:space-y-8">
                 <motion.div 
                   variants={fadeInUp}
                   className="text-center"
                 >
-                  <h2 className="mb-2 text-3xl font-extrabold text-gray-900">
+                  <h2 className="mb-2 text-2xl font-extrabold text-gray-900 md:text-3xl">
                     Create account
                   </h2>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs text-gray-600 md:text-sm">
                     Or{' '}
                     <Link
                       to="/login"
@@ -185,7 +185,7 @@ const Register = () => {
                 
                 <motion.form 
                   variants={fadeIn}
-                  className="mt-8 space-y-6" 
+                  className="mt-6 space-y-4 md:mt-8 md:space-y-6" 
                   onSubmit={handleSubmit}
                 >
                   {error && (
@@ -193,15 +193,15 @@ const Register = () => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="px-4 py-3 text-red-700 border border-red-200 rounded-lg bg-red-50"
+                      className="px-3 py-2 text-sm text-red-700 border border-red-200 rounded-lg md:px-4 md:py-3 md:text-base bg-red-50"
                     >
                       {error}
                     </motion.div>
                   )}
                   
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                     <motion.div variants={fadeInUp}>
-                      <label htmlFor="username" className="block mb-1 text-sm font-medium text-gray-700">
+                      <label htmlFor="username" className="block mb-1 text-xs font-medium text-gray-700 md:text-sm">
                         Username
                       </label>
                       <motion.input
@@ -214,7 +214,7 @@ const Register = () => {
                         type="text"
                         autoComplete="username"
                         required
-                        className="relative block w-full px-3 py-3 text-gray-900 placeholder-gray-500 transition-colors duration-200 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="relative block w-full px-3 py-2 text-sm text-gray-900 placeholder-gray-500 transition-colors duration-200 border border-gray-300 rounded-lg appearance-none md:text-base md:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Enter your username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
@@ -222,7 +222,7 @@ const Register = () => {
                     </motion.div>
 
                     <motion.div variants={fadeInUp}>
-                      <label htmlFor="email-address" className="block mb-1 text-sm font-medium text-gray-700">
+                      <label htmlFor="email-address" className="block mb-1 text-xs font-medium text-gray-700 md:text-sm">
                         Email address
                       </label>
                       <motion.input
@@ -235,7 +235,7 @@ const Register = () => {
                         type="email"
                         autoComplete="email"
                         required
-                        className="relative block w-full px-3 py-3 text-gray-900 placeholder-gray-500 transition-colors duration-200 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="relative block w-full px-3 py-2 text-sm text-gray-900 placeholder-gray-500 transition-colors duration-200 border border-gray-300 rounded-lg appearance-none md:text-base md:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Enter your email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -243,7 +243,7 @@ const Register = () => {
                     </motion.div>
                     
                     <motion.div variants={fadeInUp}>
-                      <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-700">
+                      <label htmlFor="password" className="block mb-1 text-xs font-medium text-gray-700 md:text-sm">
                         Password
                       </label>
                       <motion.input
@@ -256,7 +256,7 @@ const Register = () => {
                         type="password"
                         autoComplete="new-password"
                         required
-                        className="relative block w-full px-3 py-3 text-gray-900 placeholder-gray-500 transition-colors duration-200 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="relative block w-full px-3 py-2 text-sm text-gray-900 placeholder-gray-500 transition-colors duration-200 border border-gray-300 rounded-lg appearance-none md:text-base md:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Enter your password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -264,7 +264,7 @@ const Register = () => {
                     </motion.div>
 
                     <motion.div variants={fadeInUp}>
-                      <label htmlFor="confirm-password" className="block mb-1 text-sm font-medium text-gray-700">
+                      <label htmlFor="confirm-password" className="block mb-1 text-xs font-medium text-gray-700 md:text-sm">
                         Confirm Password
                       </label>
                       <motion.input
@@ -277,7 +277,7 @@ const Register = () => {
                         type="password"
                         autoComplete="new-password"
                         required
-                        className="relative block w-full px-3 py-3 text-gray-900 placeholder-gray-500 transition-colors duration-200 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="relative block w-full px-3 py-2 text-sm text-gray-900 placeholder-gray-500 transition-colors duration-200 border border-gray-300 rounded-lg appearance-none md:text-base md:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Confirm your password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
@@ -294,18 +294,18 @@ const Register = () => {
                       whileTap={{ scale: 0.99 }}
                       type="submit"
                       disabled={loading}
-                      className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-br from-[#192f4a] via-[#003366] to-[#005691] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                      className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-br from-[#192f4a] via-[#003366] to-[#005691] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 md:py-3"
                     >
                       {loading ? (
-                        <span className="flex items-center">
-                          <svg className="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <span className="flex items-center text-xs md:text-sm">
+                          <svg className="w-4 h-4 mr-2 -ml-1 text-white animate-spin md:w-5 md:h-5 md:mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
                           Creating account...
                         </span>
                       ) : (
-                        'Create account'
+                        <span className="text-xs md:text-sm">Create account</span>
                       )}
                     </motion.button>
                   </motion.div>
