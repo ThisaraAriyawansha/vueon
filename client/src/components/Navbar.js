@@ -10,7 +10,7 @@ const Navbar = () => {
   const location = useLocation();
 
   // Routes where the company logo should be visible
-  const logoVisibleRoutes = ['/', '/about', '/contact'];
+  const logoVisibleRoutes = ['/', '/about', '/contact','/trending'];
   const shouldShowLogo = logoVisibleRoutes.includes(location.pathname);
 
   useEffect(() => {
