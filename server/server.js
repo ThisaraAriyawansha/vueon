@@ -6,6 +6,8 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const videoRoutes = require('./routes/videos');
 const userRoutes = require('./routes/users');
+const emailRoutes = require('./routes/email');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +21,8 @@ app.use(express.static('uploads'));
 app.use('/api/auth', authRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/email', emailRoutes);
+
 
 // Serve video files
 app.use('/videos', express.static(path.join(__dirname, 'uploads', 'videos'), {
