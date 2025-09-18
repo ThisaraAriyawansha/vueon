@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Zap, Home, Award } from 'lucide-react';
 import { Play, Upload, Share, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 

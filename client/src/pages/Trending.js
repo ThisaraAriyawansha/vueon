@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, TrendingUp, Clock, Eye, Heart, Share2, Star, Search, Filter, X } from 'lucide-react';
+import { Play, TrendingUp,  Heart,  Search, Filter, } from 'lucide-react';
 import axios from 'axios';
 import VideoCard from '../components/VideoCard';
 import backgroundImage from '../assets/images/360_F_1371820258_sX7EVDEKwtqsMD4uC93V8rubwKXqaAYx.jpg';

@@ -6,7 +6,7 @@ import HeroSection from '../components/HeroSection';
 import VideoSection from './HomeComponent/VideoSection';
 import LogoSection from './HomeComponent/LogoSection';
 import VueonVideo from "../assets/video/Generated File September 18, 2025 - 9_00AM.mp4";
-import { Play, Upload, Users, TrendingUp, Star, Shield, Zap, Globe, Award, ArrowRight, CheckCircle, BarChart3, Heart, Eye } from 'lucide-react';
+import {  Upload, Users, TrendingUp,  Shield, Zap, Globe,  ArrowRight, CheckCircle, BarChart3, Heart, Eye } from 'lucide-react';
 
 const Home = () => {
   const [videos, setVideos] = useState([]);

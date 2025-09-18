@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import ReactPlayer from 'react-player';
 import { useAuth } from '../context/AuthContext';
+import { Heart, Share2, MessageCircle, Play, Eye, Calendar, User, Users, ChevronDown, ChevronUp } from 'lucide-react';
+
 
 const Watch = () => {
   const [video, setVideo] = useState(null);
@@ -19,6 +20,8 @@ const Watch = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [retryCount, setRetryCount] = useState(0);
   const [videoReady, setVideoReady] = useState(false);
+    const [showFullDescription, setShowFullDescription] = useState(false);
+  const [commentInputFocused, setCommentInputFocused] = useState(false);
 
   const { id } = useParams();
   const { currentUser } = useAuth();
@@ -350,15 +353,6 @@ const Watch = () => {
     }
   }, [video, videoUrl, retryCount]);
 
-  const handleVideoReady = useCallback(() => {
-    if (isMountedRef.current) {
-      setVideoError(false);
-      setRetryCount(0);
-      setError(''); // Clear any previous errors
-      setVideoReady(true);
-      console.log('Video player ready');
-    }
-  }, []);
 
   const handleSuggestedVideoClick = useCallback((videoId) => {
     console.log(`Navigating to suggested video ID: ${videoId}`);
@@ -533,142 +527,182 @@ const Watch = () => {
   }
 
   return (
-    <div className="container px-4 py-8 mx-auto mt-24">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+      
       {error && (
-        <div className="p-4 mb-6 text-red-700 bg-red-100 rounded-lg">
-          {error}
-          <button 
-            className="float-right px-2 py-1 font-bold rounded hover:bg-red-200" 
-            onClick={() => setError('')}
-          >
-            ×
-          </button>
+        <div className="fixed z-50 transform -translate-x-1/2 top-6 left-1/2 animate-slide-down">
+          <div className="flex items-center px-6 py-4 space-x-3 text-red-800 border border-red-200 shadow-lg bg-red-50 rounded-2xl backdrop-blur-sm bg-opacity-95">
+            <svg className="flex-shrink-0 w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <span className="text-sm font-medium">{error}</span>
+            <button 
+              className="ml-4 text-red-400 transition-colors hover:text-red-600" 
+              onClick={() => setError('')}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
       )}
       
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <div className="overflow-hidden bg-black rounded-lg aspect-video">
-            {!videoError && videoUrl ? (
-                // Replace ReactPlayer temporarily with:
-                <video 
-                  controls 
-                  width="100%" 
-                  height="100%"
-                  onError={(e) => console.error('Video element error:', e)}
-                  onLoadStart={() => console.log('Load start')}
-                  onLoadedData={() => console.log('Loaded data')}
-                  onCanPlay={() => console.log('Can play')}
-                >
-                  <source src={videoUrl} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-            ) : (
-              <div className="flex items-center justify-center w-full h-full text-white bg-gray-800">
-                <div className="text-center">
-                  <svg
-                    className="w-16 h-16 mx-auto mb-4 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+      <div className="container px-6 py-8 mx-auto pt-28">
+        <div className="grid grid-cols-1 gap-8 xl:grid-cols-4">
+          {/* Main Video Section */}
+          <div className="space-y-6 xl:col-span-3">
+            {/* Video Player */}
+            <div className="relative group">
+              <div className="overflow-hidden shadow-2xl bg-slate-900 rounded-3xl aspect-video">
+                {!videoError && videoUrl ? (
+                  <video 
+                    controls 
+                    width="100%" 
+                    height="100%"
+                    className="object-cover w-full h-full"
+                    onError={(e) => console.error('Video element error:', e)}
+                    onLoadStart={() => console.log('Load start')}
+                    onLoadedData={() => console.log('Loaded data')}
+                    onCanPlay={() => console.log('Can play')}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1}
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <p className="mb-2 text-lg">Video playback failed</p>
-                  <p className="mb-4 text-sm text-gray-400">
-                    {retryCount > 0 ? `Retry attempt ${retryCount}/2 failed` : 'The video could not be loaded'}
-                  </p>
-                  <p className="mb-4 text-xs text-gray-500">URL: {videoUrl}</p>
-                  <button
-                    onClick={handleRetry}
-                    disabled={retryCount >= 2}
-                    className="px-4 py-2 text-white rounded bg-accent hover:bg-highlight disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {retryCount >= 2 ? 'Max retries reached' : 'Retry'}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-          
-          {/* Video info section */}
-          <div className="mt-4">
-            <h1 className="text-2xl font-bold text-primary">{video?.title}</h1>
-            <div className="flex items-center justify-between mt-4">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={handleLike}
-                    disabled={!currentUser}
-                    className={`p-2 rounded-full transition-colors ${
-                      liked ? 'bg-red-100 text-red-500' : 'bg-gray-100 text-gray-600'
-                    } ${!currentUser ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
-                  >
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                    </svg>
-                  </button>
-                  <span className="font-medium">{likeCount}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button className="p-2 text-gray-600 transition-colors bg-gray-100 rounded-full hover:bg-gray-200">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-                    </svg>
-                  </button>
-                  <span className="font-medium">Share</span>
-                </div>
-              </div>
-              <div className="text-gray-600">
-                {formatViews(video?.views)} • {video ? new Date(video.created_at).toLocaleDateString() : ''}
-              </div>
-            </div>
-            
-            {/* Channel info */}
-            <div className="p-4 mt-6 rounded-lg bg-gray-50">
-              <div className="flex items-center mb-4 space-x-3">
-                <img
-                  src={video?.avatar ? `http://localhost:5000/${video.avatar}` : '/default-avatar.png'}
-                  alt={video?.username || 'Channel'}
-                  className="w-10 h-10 rounded-full"
-                  onError={(e) => {
-                    e.target.src = '/default-avatar.png';
-                  }}
-                />
-                <div className="flex-grow">
-                  <h3 className="font-semibold">{video?.username}</h3>
-                  <p className="text-sm text-gray-600">{formatSubscribers(subscriberCount)}</p>
-                </div>
-                {currentUser && video?.user_id !== currentUser.id && (
-                  <button
-                    onClick={handleSubscribe}
-                    className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
-                      subscribed 
-                        ? 'bg-gray-200 text-gray-800 hover:bg-gray-300' 
-                        : 'bg-accent text-white hover:bg-highlight'
-                    }`}
-                  >
-                    {subscribed ? 'Subscribed' : 'Subscribe'}
-                  </button>
+                    <source src={videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full text-white">
+                    <div className="space-y-4 text-center">
+                      <div className="flex items-center justify-center w-20 h-20 mx-auto rounded-full bg-slate-800">
+                        <Play className="w-8 h-8 text-slate-400" />
+                      </div>
+                      <div>
+                        <p className="mb-2 text-lg font-semibold">Video playback failed</p>
+                        <p className="mb-4 text-sm text-slate-400">
+                          {retryCount > 0 ? `Retry attempt ${retryCount}/2 failed` : 'The video could not be loaded'}
+                        </p>
+                        <button
+                          onClick={handleRetry}
+                          disabled={retryCount >= 2}
+                          className="px-6 py-3 font-medium text-white transition-all duration-300 transform bg-blue-600 rounded-full hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed hover:scale-105"
+                        >
+                          {retryCount >= 2 ? 'Max retries reached' : 'Retry'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
-              <p className="text-gray-700 whitespace-pre-wrap">{video?.description}</p>
             </div>
-          </div>
-          
-          {/* Comments section */}
-          <div className="mt-8">
-            <h2 className="mb-4 text-xl font-bold text-primary">
-              Comments ({comments.length})
-            </h2>
             
-            {currentUser && (
-              <form onSubmit={handleCommentSubmit} className="mb-6">
+            {/* Video Info */}
+            <div className="space-y-4">
+              <div>
+                <h1 className="mb-3 text-xl font-bold leading-tight xl:text-2xl text-slate-900">
+                  {video?.title}
+                </h1>
+                
+                {/* Stats and Actions Row */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200">
+                  <div className="flex items-center space-x-4 text-slate-600">
+                    <div className="flex items-center space-x-1.5">
+                      <Eye className="w-3.5 h-3.5" />
+                      <span className="text-sm font-medium">{formatViews(video?.views)}</span>
+                    </div>
+                    <div className="flex items-center space-x-1.5">
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span className="text-sm">{video ? new Date(video.created_at).toLocaleDateString() : ''}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={handleLike}
+                      disabled={!currentUser}
+                      className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full transition-all duration-300 ${
+                        liked 
+                          ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100' 
+                          : 'bg-slate-50 text-slate-600 border border-slate-200 hover:bg-slate-100'
+                      } ${!currentUser ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 shadow-md'}`}
+                    >
+                      <Heart className={`w-3.5 h-3.5 ${liked ? 'fill-current' : ''}`} />
+                      <span className="text-sm font-medium">{likeCount}</span>
+                    </button>
+                    
+                    <button className="flex items-center px-3 py-1.5 space-x-1.5 transition-all duration-300 border rounded-full shadow-md bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:scale-105">
+                      <Share2 className="w-3.5 h-3.5" />
+                      <span className="text-sm font-medium">Share</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Channel Info */}
+              <div className="p-4 bg-white border shadow-md rounded-xl border-slate-200">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <img
+                        src={video?.avatar ? `http://localhost:5000/${video.avatar}` : '/default-avatar.png'}
+                        alt={video?.username || 'Channel'}
+                        className="object-cover w-12 h-12 rounded-full ring-2 ring-slate-200"
+                        onError={(e) => {
+                          e.target.src = '/default-avatar.png';
+                        }}
+                      />
+                      <div className="absolute w-4 h-4 bg-green-400 border-2 border-white rounded-full -bottom-1 -right-1"></div>
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900">{video?.username}</h3>
+                      <div className="flex items-center space-x-1.5 text-slate-500">
+                        <Users className="w-3.5 h-3.5" />
+                        <span className="text-xs">{formatSubscribers(subscriberCount)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {currentUser && video?.user_id !== currentUser.id && (
+                    <button
+                      onClick={handleSubscribe}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-md ${
+                        subscribed 
+                          ? 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200' 
+                          : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
+                      }`}
+                    >
+                      {subscribed ? 'Subscribed' : 'Subscribe'}
+                    </button>
+                  )}
+                </div>
+                
+                {/* Description */}
+                <div className="relative">
+                  <div className={`text-sm text-slate-700 leading-relaxed ${showFullDescription ? '' : 'line-clamp-3'} whitespace-pre-wrap`}>
+                    {video?.description}
+                  </div>
+                  {video?.description && video.description.length > 150 && (
+                    <button
+                      onClick={() => setShowFullDescription(!showFullDescription)}
+                      className="flex items-center mt-1.5 space-x-1 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700"
+                    >
+                      <span>{showFullDescription ? 'Show less' : 'Show more'}</span>
+                      {showFullDescription ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {/* Comments Section */}
+            <div className="p-6 bg-white border shadow-lg rounded-2xl border-slate-200">
+              <div className="flex items-center mb-6 space-x-3">
+                <MessageCircle className="w-6 h-6 text-slate-600" />
+                <h2 className="text-xl font-bold text-slate-900">
+                  Comments ({comments.length})
+                </h2>
+              </div>
+              
+              {currentUser && (
+                              <form onSubmit={handleCommentSubmit} className="mb-6">
                 <div className="flex space-x-3">
                   <img
                     src={currentUser.avatar ? `http://localhost:5000/${currentUser.avatar}` : '/default-avatar.png'}
@@ -697,83 +731,118 @@ const Watch = () => {
                   </button>
                 </div>
               </form>
-            )}
-            
-            <div className="space-y-4">
-              {comments.map(comment => (
-                <div key={comment.id} className="flex space-x-3">
-                  <img
-                    src={comment.avatar ? `http://localhost:5000/${comment.avatar}` : '/default-avatar.png'}
-                    alt={comment.username}
-                    className="w-8 h-8 rounded-full"
-                    onError={(e) => {
-                      e.target.src = '/default-avatar.png';
-                    }}
-                  />
-                  <div className="flex-grow">
-                    <div className="p-3 rounded-lg bg-gray-50">
-                      <h4 className="font-semibold">{comment.username}</h4>
-                      <p className="text-gray-700">{comment.content}</p>
-                    </div>
-                    <div className="mt-1 text-sm text-gray-500">
-                      {new Date(comment.created_at).toLocaleDateString()}
+              )}
+              
+              <div className="space-y-4">
+                {comments.map((comment, index) => (
+                  <div key={comment.id} className={`flex space-x-3 animate-slide-in`} style={{animationDelay: `${index * 0.1}s`}}>
+                    <img
+                      src={comment.avatar ? `http://localhost:5000/${comment.avatar}` : '/default-avatar.png'}
+                      alt={comment.username}
+                      className="flex-shrink-0 object-cover w-8 h-8 rounded-full ring-2 ring-slate-200"
+                      onError={(e) => {
+                        e.target.src = '/default-avatar.png';
+                      }}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="p-3 transition-colors duration-300 bg-slate-50 rounded-xl hover:bg-slate-100">
+                        <div className="flex items-center mb-1 space-x-2">
+                          <h4 className="text-sm font-semibold text-slate-900">{comment.username}</h4>
+                          <span className="text-xs text-slate-500">
+                            {new Date(comment.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="text-sm leading-relaxed text-slate-700">{comment.content}</p>
+                      </div>
                     </div>
                   </div>
+                ))}
+                {comments.length === 0 && (
+                  <div className="py-8 text-center">
+                    <div className="flex items-center justify-center w-12 h-12 mx-auto mb-3 rounded-full bg-slate-100">
+                      <MessageCircle className="w-6 h-6 text-slate-400" />
+                    </div>
+                    <p className="text-base text-slate-500">No comments yet</p>
+                    <p className="mt-1 text-xs text-slate-400">Be the first to share your thoughts!</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {/* Suggested Videos Sidebar */}
+          <div className="xl:col-span-1">
+            <div className="sticky space-y-6 top-28">
+              <div className="p-6 bg-white border shadow-lg rounded-2xl border-slate-200">
+                <h2 className="flex items-center mb-6 space-x-2 text-xl font-bold text-slate-900">
+                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"></div>
+                  <span>Up Next</span>
+                </h2>
+                
+                <div className="space-y-4">
+                  {suggestedVideos.map((suggestedVideo, index) => (
+                    <div
+                      key={suggestedVideo.id}
+                      className={`group cursor-pointer animate-slide-in`}
+                      style={{animationDelay: `${index * 0.1}s`}}
+                      onClick={() => handleSuggestedVideoClick(suggestedVideo.id)}
+                    >
+                      <div className="flex space-x-3 p-3 rounded-xl hover:bg-slate-50 transition-all duration-300 transform hover:scale-[1.02]">
+                        <div className="relative flex-shrink-0 w-40 h-24 overflow-hidden bg-slate-200 rounded-xl">
+                          <img
+                            src={suggestedVideo.thumbnail ? `http://localhost:5000/${suggestedVideo.thumbnail}` : '/default-thumbnail.jpg'}
+                            alt={suggestedVideo.title}
+                            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                            onError={(e) => {
+                              e.target.src = '/default-thumbnail.jpg';
+                            }}
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-0 group-hover:bg-opacity-20">
+                            <Play className="w-6 h-6 text-white transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
+                          </div>
+                          <div className="absolute px-2 py-1 text-xs font-medium text-white bg-black rounded-lg bottom-2 right-2 bg-opacity-80">
+                            {formatDuration(suggestedVideo.duration)}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0 space-y-1">
+                          <h4 className="text-sm font-semibold leading-tight transition-colors text-slate-900 line-clamp-2 group-hover:text-blue-600">
+                            {suggestedVideo.title}
+                          </h4>
+                          <div className="flex items-center space-x-1 text-xs text-slate-500">
+                            <User className="w-3 h-3" />
+                            <span className="truncate">{suggestedVideo.username}</span>
+                          </div>
+                          <div className="flex items-center space-x-2 text-xs text-slate-400">
+                            <div className="flex items-center space-x-1">
+                              <Eye className="w-3 h-3" />
+                              <span>{formatViews(suggestedVideo.views)}</span>
+                            </div>
+                            <span>•</span>
+                            <span>{new Date(suggestedVideo.created_at).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {suggestedVideos.length === 0 && (
+                    <div className="py-8 text-center">
+                      <div className="flex items-center justify-center w-12 h-12 mx-auto mb-3 rounded-full bg-slate-100">
+                        <Play className="w-6 h-6 text-slate-400" />
+                      </div>
+                      <p className="text-sm text-slate-500">No suggested videos available</p>
+                    </div>
+                  )}
                 </div>
-              ))}
-              {comments.length === 0 && (
-                <p className="py-4 text-center text-gray-500">
-                  No comments yet. Be the first to comment!
-                </p>
-              )}
+              </div>
             </div>
           </div>
         </div>
-        
-        {/* Suggested videos sidebar */}
-        <div className="lg:col-span-1">
-          <h2 className="mb-4 text-xl font-bold text-primary">Suggested Videos</h2>
-          <div className="space-y-3">
-            {suggestedVideos.map(suggestedVideo => (
-              <div
-                key={suggestedVideo.id}
-                className="flex space-x-2 cursor-pointer transition-transform hover:scale-[1.02]"
-                onClick={() => handleSuggestedVideoClick(suggestedVideo.id)}
-              >
-                <div className="relative flex-shrink-0 w-40 h-24 overflow-hidden bg-gray-300 rounded-lg">
-                  <img
-                    src={suggestedVideo.thumbnail ? `http://localhost:5000/${suggestedVideo.thumbnail}` : '/default-thumbnail.jpg'}
-                    alt={suggestedVideo.title}
-                    className="object-cover w-full h-full"
-                    onError={(e) => {
-                      e.target.src = '/default-thumbnail.jpg';
-                    }}
-                  />
-                  <div className="absolute px-1 text-xs text-white bg-black rounded bottom-1 right-1">
-                    {formatDuration(suggestedVideo.duration)}
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="mb-1 text-sm font-semibold leading-tight line-clamp-2">
-                    {suggestedVideo.title}
-                  </h4>
-                  <p className="text-xs text-gray-600 truncate">{suggestedVideo.username}</p>
-                  <p className="text-xs text-gray-500">
-                    {formatViews(suggestedVideo.views)} • {new Date(suggestedVideo.created_at).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            ))}
-            {suggestedVideos.length === 0 && (
-              <div className="py-4 text-center text-gray-500">
-                No suggested videos available
-              </div>
-            )}
-          </div>
-        </div>
       </div>
+      
+
     </div>
   );
-};
+  };
 
-export default Watch;
+export default Watch; 

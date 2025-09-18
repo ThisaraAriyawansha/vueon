@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Play, Eye, Heart, Clock, User } from 'lucide-react';
+import { Play, Eye, Heart, Clock } from 'lucide-react';
 
 const VideoCard = ({ video }) => {
   const formatViews = (views) => {

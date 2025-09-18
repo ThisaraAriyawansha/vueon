@@ -70,7 +70,7 @@ const Navbar = () => {
                 <div className={`items-center hidden rounded-l-full rounded-r-full md:flex
                   backdrop-blur-md transition-all duration-500 ease-in-out
                   ${shouldHideLogo 
-                    ? 'w-full justify-between px-8 py-2 bg-primary bg-opacity-50' 
+                    ? 'w-full justify-between px-8 py-2 bg-primary bg-opacity-100' 
                     : 'ml-8 p-2 space-x-6 bg-white bg-opacity-20'
                   }`}
                 >
