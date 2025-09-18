@@ -24,11 +24,12 @@ const LogoSection = () => {
 
   // Placeholder logo component
   const LogoPlaceholder = () => (
-    <img
-      src={LogoImage}
-      alt="Vueon Logo"
-      className="w-auto h-60 md:h-60 lg:h-72"
-    />
+            <img
+            src={LogoImage}
+            alt="Vueon Logo"
+            className="w-auto h-60 md:h-72 lg:h-80 xl:h-96"
+            />
+
   );
 
   return (
@@ -36,7 +37,7 @@ const LogoSection = () => {
       ref={sectionRef}
       className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100"
     >
-    <div className="mt-6mb-12 md:mt-16 md:mb-16">
+    <div className="mb-12 mt-6mb-12 md:mt-16 md:mb-16">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute rounded-full -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-100/30 to-purple-100/30 blur-3xl animate-pulse"></div>
@@ -56,7 +57,7 @@ const LogoSection = () => {
             >
               <div className="relative group">
                 {/* Logo container */}
-                <div className="relative p-10 transition-all duration-500 sm:p-12 backdrop-blur-xl">
+                <div className="relative mt-2 transition-all duration-500 backdrop-blur-xl">
                   <LogoPlaceholder />
                 </div>
               </div>
