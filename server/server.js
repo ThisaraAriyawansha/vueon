@@ -7,6 +7,8 @@ const authRoutes = require('./routes/auth');
 const videoRoutes = require('./routes/videos');
 const userRoutes = require('./routes/users');
 const emailRoutes = require('./routes/email');
+const speedRoutes = require('./routes/speed');
+
 
 
 const app = express();
@@ -22,6 +24,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/email', emailRoutes);
+app.use('/api/speed', speedRoutes);
+
 
 
 // Serve video files
