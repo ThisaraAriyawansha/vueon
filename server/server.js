@@ -9,7 +9,7 @@ const userRoutes = require('./routes/users');
 const emailRoutes = require('./routes/email');
 const speedRoutes = require('./routes/speed');
 
-
+const searchRoutes = require('./routes/search');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,7 +25,16 @@ app.use('/api/videos', videoRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/email', emailRoutes);
 app.use('/api/speed', speedRoutes);
+app.use('/api/search', searchRoutes);
 
+
+// Create data directory for embeddings
+const fs = require('fs');
+
+const dataDir = path.join(__dirname, 'data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
 
 
 // Serve video files

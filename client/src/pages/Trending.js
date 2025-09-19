@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, TrendingUp,  Heart,  Search, Filter, } from 'lucide-react';
+import { Play, TrendingUp, Heart, Search, Filter, Sparkles, Bot, X, Clock, Zap, Brain } from 'lucide-react';
 import axios from 'axios';
 import VideoCard from '../components/VideoCard';
 import backgroundImage from '../assets/images/360_F_1371820258_sX7EVDEKwtqsMD4uC93V8rubwKXqaAYx.jpg';
@@ -10,6 +10,7 @@ const Trending = () => {
   const [isVisible, setIsVisible] = useState({});
   const [scrollY, setScrollY] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [searchLoading, setSearchLoading] = useState(false);
   const [error, setError] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,6 +19,11 @@ const Trending = () => {
   const [sortBy, setSortBy] = useState('views');
   const [timeFilter, setTimeFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+  const [searchType, setSearchType] = useState('semantic'); // Default to semantic
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchHistory, setSearchHistory] = useState([]);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // Handle window resize to update isMobile state
   useEffect(() => {
@@ -53,6 +59,21 @@ const Trending = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Load search history from localStorage
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('searchHistory');
+    if (savedHistory) {
+      setSearchHistory(JSON.parse(savedHistory));
+    }
+  }, []);
+
+  // Save search history to localStorage
+  useEffect(() => {
+    if (searchHistory.length > 0) {
+      localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+    }
+  }, [searchHistory]);
+
   useEffect(() => {
     const fetchTrendingVideos = async () => {
       try {
@@ -74,19 +95,113 @@ const Trending = () => {
     fetchTrendingVideos();
   }, []);
 
-  // Filter videos based on search and filters
-  useEffect(() => {
-    let results = [...videos];
-    
-    // Apply search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      results = results.filter(video => 
-        video.title.toLowerCase().includes(query) || 
-        video.description.toLowerCase().includes(query) ||
-        (video.tags && JSON.parse(video.tags).some(tag => tag.toLowerCase().includes(query)))
-      );
+  // Generate AI suggestions based on current query
+  const generateSuggestions = async (query) => {
+    if (!query.trim()) {
+      setSuggestions([]);
+      return;
     }
+
+    try {
+      // In a real app, you would call an API endpoint for suggestions
+      // For now, we'll simulate it with some intelligent suggestions
+      const mockSuggestions = [
+        { type: 'semantic', text: `Find videos similar to "${query}"` },
+        { type: 'category', text: `Search in ${selectedCategory !== 'all' ? selectedCategory : 'all categories'}` },
+        { type: 'concept', text: `Explore concepts related to "${query}"` },
+        { type: 'trending', text: `Show trending videos about "${query}"` },
+      ];
+      
+      setSuggestions(mockSuggestions);
+    } catch (error) {
+      console.error('Error generating suggestions:', error);
+    }
+  };
+
+  // Add query to search history
+  const addToSearchHistory = (query) => {
+    if (!query.trim()) return;
+    
+    const updatedHistory = [
+      query,
+      ...searchHistory.filter(item => item !== query).slice(0, 4) // Keep only 5 recent items
+    ];
+    
+    setSearchHistory(updatedHistory);
+  };
+
+  // Perform semantic search
+  const performSemanticSearch = async (query) => {
+    try {
+      setSearchLoading(true);
+      const response = await axios.post('http://localhost:5000/api/search/semantic', {
+        query,
+        limit: 50,
+        threshold: 0.5
+      });
+      
+      // Get video IDs from semantic search results
+      const videoIds = response.data.results.map(result => result.videoId);
+      
+      // Filter videos based on semantic search results
+      const semanticVideos = videos.filter(video => 
+        videoIds.includes(video.id)
+      );
+      
+      // Sort by the order of relevance from semantic search
+      semanticVideos.sort((a, b) => {
+        return videoIds.indexOf(a.id) - videoIds.indexOf(b.id);
+      });
+      
+      setFilteredVideos(semanticVideos);
+      addToSearchHistory(query);
+    } catch (error) {
+      console.error('Error performing semantic search:', error);
+      // Fall back to keyword search if semantic search fails
+      performKeywordSearch(query);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  // Perform keyword search (original functionality)
+  const performKeywordSearch = (query) => {
+    const queryLower = query.toLowerCase();
+    const results = videos.filter(video => 
+      video.title.toLowerCase().includes(queryLower) || 
+      video.description.toLowerCase().includes(queryLower) ||
+      (video.tags && JSON.parse(video.tags).some(tag => tag.toLowerCase().includes(queryLower)))
+    );
+    
+    setFilteredVideos(results);
+    addToSearchHistory(query);
+  };
+
+  // Handle search input with debounce
+  useEffect(() => {
+    if (!searchQuery) {
+      // If search query is empty, show all videos with current filters
+      applyFiltersToVideos(videos);
+      setSuggestions([]);
+      return;
+    }
+
+    generateSuggestions(searchQuery);
+
+    const delayDebounceFn = setTimeout(() => {
+      if (searchType === 'semantic') {
+        performSemanticSearch(searchQuery);
+      } else {
+        performKeywordSearch(searchQuery);
+      }
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery, searchType]);
+
+  // Apply filters to videos
+  const applyFiltersToVideos = (videosToFilter) => {
+    let results = [...videosToFilter];
     
     // Apply category filter
     if (selectedCategory !== 'all') {
@@ -123,10 +238,28 @@ const Trending = () => {
     });
     
     setFilteredVideos(results);
-  }, [videos, searchQuery, selectedCategory, sortBy, timeFilter]);
+  };
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      if (searchType === 'semantic') {
+        performSemanticSearch(searchQuery);
+      } else {
+        performKeywordSearch(searchQuery);
+      }
+      setShowSuggestions(false);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setShowSuggestions(false);
+    applyFiltersToVideos(videos);
   };
 
   const clearFilters = () => {
@@ -134,7 +267,33 @@ const Trending = () => {
     setSelectedCategory('all');
     setSortBy('views');
     setTimeFilter('all');
+    setSearchType('semantic');
+    setShowSuggestions(false);
   };
+
+  const toggleSearchType = () => {
+    setSearchType(prevType => {
+      const newType = prevType === 'keyword' ? 'semantic' : 'keyword';
+      
+      // If there's a search query, re-run search with new type
+      if (searchQuery) {
+        if (newType === 'semantic') {
+          performSemanticSearch(searchQuery);
+        } else {
+          performKeywordSearch(searchQuery);
+        }
+      }
+      
+      return newType;
+    });
+  };
+
+  // Update filtered videos when filters change (excluding search)
+  useEffect(() => {
+    if (!searchQuery) {
+      applyFiltersToVideos(videos);
+    }
+  }, [selectedCategory, sortBy, timeFilter]);
 
   if (loading) {
     return (
@@ -255,18 +414,129 @@ const Trending = () => {
 
       {/* Content Section */}
       <div className="container px-6 py-12 mx-auto">
-        {/* Search and Filter Bar */}
+        {/* AI Search Bar */}
         <div className="flex flex-col mb-8 md:flex-row md:items-center md:justify-between">
-          <div className="relative flex-1 mb-4 md:mb-0 md:max-w-md">
-            <Search className="absolute w-5 h-5 text-blue-600 transform -translate-y-1/2 left-3 top-1/2" />
-            <input
-              type="text"
-              placeholder="Search trending videos..."
-              className="w-full py-3 pl-10 pr-4 bg-white shadow-sm rounded-2xl focus:ring-2 focus:ring-blue-300 focus:outline-none"
-              value={searchQuery}
-              onChange={handleSearch}
-              style={{ fontFamily: "'SF Pro Text', sans-serif" }}
-            />
+          <div className="relative flex-1 mb-4 md:mb-0 md:max-w-2xl">
+            <form onSubmit={handleSearchSubmit} className="relative">
+              <div className="absolute left-0 flex items-center h-full pl-4">
+                {searchLoading ? (
+                  <div className="w-5 h-5 border-t-2 border-blue-600 border-solid rounded-full animate-spin"></div>
+                ) : (
+                  <Search className="w-5 h-5 text-blue-600" />
+                )}
+              </div>
+              
+              <input
+                type="text"
+                placeholder="Ask AI to find videos... (e.g. 'funny cat videos' or 'educational content')"
+                className="w-full py-3 pl-12 pr-12 bg-white shadow-sm rounded-2xl focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                value={searchQuery}
+                onChange={handleSearch}
+                onFocus={() => {
+                  setIsSearchFocused(true);
+                  setShowSuggestions(true);
+                }}
+                onBlur={() => {
+                  setTimeout(() => setIsSearchFocused(false), 200);
+                }}
+                style={{ fontFamily: "'SF Pro Text', sans-serif" }}
+              />
+              
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={clearSearch}
+                  className="absolute transform -translate-y-1/2 right-20 top-1/2"
+                >
+                  <X className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                </button>
+              )}
+              
+              <button
+                type="submit"
+                className="absolute flex items-center justify-center transform -translate-y-1/2 right-3 top-1/2"
+              >
+                <div className="flex items-center px-3 py-1 text-sm text-white rounded-lg shadow-sm bg-gradient-to-br from-[#192f4a] via-[#003366] to-[#005691]">
+                  <Zap className="w-4 h-4 mr-1" />
+                  <span>AI Search</span>
+                </div>
+              </button>
+            </form>
+            
+            {/* AI Suggestions Dropdown */}
+            {isSearchFocused && (searchQuery || searchHistory.length > 0) && showSuggestions && (
+              <div className="absolute left-0 right-0 z-50 mt-2 bg-white shadow-lg rounded-2xl top-full">
+                <div className="p-4 border-b border-gray-100">
+                  <div className="flex items-center text-sm font-medium text-gray-700">
+                    <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />
+                    <span>AI Suggestions</span>
+                  </div>
+                </div>
+                
+                {/* Search history */}
+                {!searchQuery && searchHistory.length > 0 && (
+                  <div className="p-2">
+                    <div className="flex items-center px-3 py-2 text-xs font-medium text-gray-500 uppercase">
+                      <Clock className="w-3 h-3 mr-2" />
+                      <span>Recent Searches</span>
+                    </div>
+                    {searchHistory.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50"
+                        onClick={() => {
+                          setSearchQuery(item);
+                          setShowSuggestions(false);
+                        }}
+                      >
+                        <Clock className="w-4 h-4 mr-3 text-gray-400" />
+                        <span className="text-gray-700">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {/* AI-generated suggestions */}
+                {searchQuery && suggestions.length > 0 && (
+                  <div className="p-2">
+                    <div className="flex items-center px-3 py-2 text-xs font-medium text-gray-500 uppercase">
+                      <Brain className="w-3 h-3 mr-2" />
+                      <span>Try these AI-powered searches</span>
+                    </div>
+                    {suggestions.map((suggestion, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50"
+                        onClick={() => {
+                          // For demo purposes, just set the query to the suggestion text
+                          // In a real app, you would execute the suggested search
+                          setSearchQuery(suggestion.text);
+                          setShowSuggestions(false);
+                        }}
+                      >
+                        <Sparkles className="w-4 h-4 mr-3 text-yellow-500" />
+                        <span className="text-gray-700">{suggestion.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                <div className="p-3 bg-gray-50 rounded-b-2xl">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center text-xs text-gray-500">
+                      <Bot className="w-3 h-3 mr-1" />
+                      <span>Powered by AI</span>
+                    </div>
+                    <button
+                      onClick={toggleSearchType}
+                      className="flex items-center text-xs text-blue-600 hover:text-blue-800"
+                    >
+                      {searchType === 'keyword' ? 'Switch to AI Search' : 'Switch to Keyword Search'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="flex items-center space-x-4">
@@ -388,13 +658,28 @@ const Trending = () => {
                   <option value="month">This Month</option>
                 </select>
               </div>
+
+              <div className="mt-6">
+                <h4 className="mb-3 font-medium text-gray-700" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>
+                  Search Intelligence
+                </h4>
+                <div className="p-4 rounded-lg bg-blue-50">
+                  <div className="flex items-center mb-2">
+                    <Bot className="w-4 h-4 mr-2 text-blue-600" />
+                    <span className="text-sm font-medium text-blue-700">AI-Powered Search</span>
+                  </div>
+                  <p className="text-xs text-blue-600">
+                    Our AI understands context and meaning, not just keywords. Try asking naturally like you would ask a person.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
           
           {/* Main Content */}
           <div className="flex-1">
             {/* Stats Bar */}
-            <div className="hidden grid-cols-1 gap-5 mb-12  md:grid-cols-3">
+            <div className="hidden grid-cols-1 gap-5 mb-12 md:grid-cols-3">
               <div className="p-5 transition-shadow duration-200 bg-white shadow-sm rounded-2xl hover:shadow-md">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
@@ -441,14 +726,49 @@ const Trending = () => {
             {/* Results Count */}
             <div className="mb-6">
               <p className="text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>
-                Showing {filteredVideos.length} of {videos.length} videos
-                {searchQuery && ` for "${searchQuery}"`}
-                {selectedCategory !== 'all' && ` in ${selectedCategory}`}
+                {searchQuery ? (
+                  <>
+                    AI found {filteredVideos.length} results for "{searchQuery}"
+                    {selectedCategory !== 'all' && ` in ${selectedCategory}`}
+                  </>
+                ) : (
+                  `Showing ${filteredVideos.length} of ${videos.length} trending videos`
+                )}
               </p>
             </div>
 
+            {/* AI Search Explanation */}
+            {searchQuery && searchType === 'semantic' && (
+              <div className="p-4 mb-6 bg-blue-50 rounded-2xl">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <Bot className="w-5 h-5 mt-1 text-blue-600" />
+                  </div>
+                  <div className="ml-3">
+                    <h4 className="text-sm font-medium text-blue-800">AI Search Understanding</h4>
+                    <p className="mt-1 text-sm text-blue-700">
+                      Your search for "{searchQuery}" was processed using our AI semantic search, which understands the context and meaning behind your query rather than just matching keywords.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Loading indicator for search */}
+            {searchLoading && (
+              <div className="flex items-center justify-center py-8 mb-6 bg-white shadow-sm rounded-2xl">
+                <div className="text-center">
+                  <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-blue-100 rounded-full">
+                    <Sparkles className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <h3 className="mb-2 text-lg font-medium text-gray-900">AI is searching...</h3>
+                  <p className="text-gray-600">Analyzing videos based on your query</p>
+                </div>
+              </div>
+            )}
+
             {/* Videos Grid */}
-            {filteredVideos.length === 0 ? (
+            {filteredVideos.length === 0 && !searchLoading ? (
               <div className="py-16 text-center">
                 <div className="flex items-center justify-center w-20 h-20 mx-auto mb-6 bg-blue-100 rounded-full shadow-sm">
                   <Search className="w-8 h-8 text-blue-600" />

@@ -5,6 +5,9 @@ const fs = require('fs');
 const db = require('../config/database');
 const { auth } = require('../middleware/auth');
 const router = express.Router();
+const EmbeddingService = require('../services/embeddingService');
+
+const embeddingService = new EmbeddingService();
 
 // Create upload directories if they don't exist
 const createDirectories = () => {
@@ -227,6 +230,45 @@ router.get('/trending', (req, res) => {
     res.json(results);
   });
 });
+
+
+// Search endpoint
+router.get('/search', async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ error: 'Search query is required' });
+  }
+
+  try {
+    // Fetch all videos from your database (adjust based on your database setup)
+    const videos = await getVideosFromDatabase(); // Implement this function to fetch videos
+    const searchResults = await embeddingService.hybridSearch(query, videos, 0.7, 0.3, 20);
+
+    // Map search results to include full video data
+    const resultsWithVideoData = searchResults.map(result => {
+      const video = videos.find(v => v.id === result.videoId);
+      return {
+        ...video,
+        combinedScore: result.combinedScore,
+        semanticScore: result.semanticScore,
+        keywordScore: result.keywordScore
+      };
+    });
+
+    res.json(resultsWithVideoData);
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Example function to fetch videos from database (replace with your actual database logic)
+async function getVideosFromDatabase() {
+  // This is a placeholder; replace with your actual database query
+  // e.g., using Sequelize, Mongoose, or another ORM/ODM
+  return await Video.findAll(); // Example for Sequelize
+}
 
 // Get video by ID - Updated query
 router.get('/:id', (req, res) => {
