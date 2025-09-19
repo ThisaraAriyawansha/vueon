@@ -1,2 +1,4 @@
 # Ignore uploaded videos
 server/uploads/videos/
+
+server/.env
