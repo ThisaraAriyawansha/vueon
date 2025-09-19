@@ -118,7 +118,7 @@ const Navbar = () => {
                         <span className="text-sm">{currentUser.username}</span>
                       </button>
                       {isMenuOpen && (
-                        <div className="absolute right-0 z-50 w-48 py-2 mt-2 rounded shadow-lg bg-primary bg-opacity-30 backdrop-blur-md text-primary">
+                        <div className="absolute right-0 z-50 w-48 py-2 mt-2 bg-opacity-50 rounded shadow-lg bg-primary backdrop-blur-md text-primary">
                           <Link
                             to={`/profile/${currentUser.id}`}
                             className="block px-4 py-2 text-sm text-white hover:bg-gray-500"
