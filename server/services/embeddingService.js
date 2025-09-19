@@ -1,16 +1,36 @@
-// backend/services/embeddingService.js
-const OpenAI = require('openai');
+const { pipeline } = require('@huggingface/transformers');
 const fs = require('fs').promises;
 const path = require('path');
 
+let instance = null;
+
 class EmbeddingService {
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
+    if (instance) {
+      console.log('Returning existing EmbeddingService instance');
+      return instance;
+    }
+    instance = this;
+    console.log('Creating new EmbeddingService instance');
     this.embeddingsFile = path.join(__dirname, '../data/video_embeddings.json');
     this.videoEmbeddings = new Map();
+    this.embeddingModel = null; // Initialize as null
+    this.initModel(); // Async model initialization
     this.loadEmbeddings();
+  }
+
+  async initModel() {
+    try {
+      console.log('Loading model: sentence-transformers/all-MiniLM-L6-v2');
+      this.embeddingModel = await pipeline('feature-extraction', 'sentence-transformers/all-MiniLM-L6-v2', {
+        device: 'cpu',
+        dtype: 'fp32' // Explicitly set to match log
+      });
+      console.log('Model loaded successfully');
+    } catch (error) {
+      console.error('Failed to initialize model:', error.message);
+      throw error;
+    }
   }
 
   async loadEmbeddings() {
@@ -34,7 +54,6 @@ class EmbeddingService {
     }
   }
 
-  // Create searchable text from video metadata
   createVideoText(video) {
     const parts = [
       video.title || '',
@@ -49,18 +68,20 @@ class EmbeddingService {
     return parts.join(' ').toLowerCase();
   }
 
-  // Generate embeddings for a single video
   async generateVideoEmbedding(video) {
     try {
       const videoText = this.createVideoText(video);
+      console.log(`Generating embedding for video ${video.id} with text: ${videoText.substring(0, 50)}...`);
       
-      const response = await this.openai.embeddings.create({
-        model: 'text-embedding-3-small', // More cost-effective
-        input: videoText,
-        encoding_format: 'float',
-      });
+      if (!this.embeddingModel) {
+        throw new Error('Embedding model not initialized');
+      }
+      
+      const embeddingResult = await this.embeddingModel(videoText, { pooling: 'mean', normalize: true });
+      const embedding = Array.from(embeddingResult.data);
 
-      const embedding = response.data[0].embedding;
+      console.log(`Embedding generated for video ${video.id}, length: ${embedding.length}`);
+
       this.videoEmbeddings.set(video.id.toString(), {
         embedding,
         metadata: {
@@ -79,10 +100,14 @@ class EmbeddingService {
     }
   }
 
-  // Generate embeddings for multiple videos
   async generateBatchEmbeddings(videos, batchSize = 10) {
     console.log(`Generating embeddings for ${videos.length} videos...`);
     
+    // Ensure model is initialized before processing
+    if (!this.embeddingModel) {
+      await this.initModel();
+    }
+
     for (let i = 0; i < videos.length; i += batchSize) {
       const batch = videos.slice(i, i + batchSize);
       
@@ -90,13 +115,11 @@ class EmbeddingService {
         await Promise.all(batch.map(video => this.generateVideoEmbedding(video)));
         console.log(`Processed batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(videos.length / batchSize)}`);
         
-        // Save periodically
         if ((i + batchSize) % 50 === 0) {
           await this.saveEmbeddings();
         }
         
-        // Rate limiting
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 100));
       } catch (error) {
         console.error(`Error processing batch starting at index ${i}:`, error);
       }
@@ -106,7 +129,6 @@ class EmbeddingService {
     console.log('Finished generating embeddings');
   }
 
-  // Calculate cosine similarity between two vectors
   cosineSimilarity(vecA, vecB) {
     const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
     const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
@@ -116,20 +138,16 @@ class EmbeddingService {
     return dotProduct / (magnitudeA * magnitudeB);
   }
 
-  // Perform semantic search
   async semanticSearch(query, limit = 20, threshold = 0.7) {
     try {
-      // Generate embedding for search query
-      const response = await this.openai.embeddings.create({
-        model: 'text-embedding-3-small',
-        input: query.toLowerCase(),
-        encoding_format: 'float',
-      });
-
-      const queryEmbedding = response.data[0].embedding;
+      if (!this.embeddingModel) {
+        throw new Error('Embedding model not initialized');
+      }
+      
+      const queryEmbeddingResult = await this.embeddingModel(query.toLowerCase(), { pooling: 'mean', normalize: true });
+      const queryEmbedding = Array.from(queryEmbeddingResult.data);
       const results = [];
 
-      // Calculate similarities with all video embeddings
       for (const [videoId, videoData] of this.videoEmbeddings) {
         const similarity = this.cosineSimilarity(queryEmbedding, videoData.embedding);
         
@@ -142,9 +160,7 @@ class EmbeddingService {
         }
       }
 
-      // Sort by similarity score (highest first)
       results.sort((a, b) => b.similarity - a.similarity);
-      
       return results.slice(0, limit);
     } catch (error) {
       console.error('Error performing semantic search:', error);
@@ -152,31 +168,25 @@ class EmbeddingService {
     }
   }
 
-  // Hybrid search combining keyword and semantic search
   async hybridSearch(query, videos, semanticWeight = 0.7, keywordWeight = 0.3, limit = 20) {
     try {
-      // Perform semantic search
       const semanticResults = await this.semanticSearch(query, videos.length);
       const semanticMap = new Map(semanticResults.map(r => [r.videoId, r.similarity]));
 
-      // Perform keyword search
       const keywords = query.toLowerCase().split(' ');
       const keywordResults = videos.map(video => {
         const videoText = this.createVideoText(video).toLowerCase();
         let score = 0;
         
         keywords.forEach(keyword => {
-          // Exact match bonus
           if (videoText.includes(keyword)) {
             score += 1;
           }
           
-          // Title match bonus
           if (video.title && video.title.toLowerCase().includes(keyword)) {
             score += 2;
           }
           
-          // Category match bonus
           if (video.category && video.category.toLowerCase().includes(keyword)) {
             score += 1.5;
           }
@@ -184,11 +194,10 @@ class EmbeddingService {
         
         return {
           videoId: video.id,
-          keywordScore: Math.min(score / keywords.length, 1) // Normalize to 0-1
+          keywordScore: Math.min(score / keywords.length, 1)
         };
       });
 
-      // Combine scores
       const hybridResults = keywordResults.map(result => {
         const semanticScore = semanticMap.get(result.videoId) || 0;
         const combinedScore = (semanticScore * semanticWeight) + (result.keywordScore * keywordWeight);
@@ -201,7 +210,6 @@ class EmbeddingService {
         };
       });
 
-      // Sort by combined score and filter by minimum threshold
       const filteredResults = hybridResults
         .filter(r => r.combinedScore > 0.3)
         .sort((a, b) => b.combinedScore - a.combinedScore)

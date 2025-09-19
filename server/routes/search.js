@@ -1,37 +1,61 @@
-// backend/routes/search.js
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const EmbeddingService = require('../services/embeddingService');
 
-const embeddingService = new EmbeddingService();
+// Use shared EmbeddingService instance
+router.use((req, res, next) => {
+  req.embeddingService = req.app.get('embeddingService');
+  if (!req.embeddingService) {
+    console.error('EmbeddingService not initialized in app');
+    return res.status(500).json({ success: false, error: 'EmbeddingService not available' });
+  }
+  next();
+});
 
 // Initialize embeddings for all videos
 router.post('/initialize-embeddings', async (req, res) => {
   try {
-    const [videos] = await db.execute(`
+    const query = `
       SELECT id, title, description, category, tags, views, like_count, 
              duration, transcript
       FROM videos 
       WHERE status = 'published'
-    `);
+    `;
+    console.log('Executing query for initialize-embeddings:', query);
+    const result = await db.execute(query);
+    
+    console.log('Query result:', result);
+    if (!result || !Array.isArray(result[0])) {
+      throw new Error('Database query returned non-iterable result');
+    }
+    
+    const videos = result[0];
+    console.log(`Found ${videos.length} videos`);
 
-    await embeddingService.generateBatchEmbeddings(videos);
+    if (videos.length === 0) {
+      return res.json({
+        success: true,
+        message: 'No published videos found to generate embeddings'
+      });
+    }
+
+    await req.embeddingService.generateBatchEmbeddings(videos);
     
     res.json({ 
       success: true, 
       message: `Generated embeddings for ${videos.length} videos` 
     });
   } catch (error) {
-    console.error('Error initializing embeddings:', error);
+    console.error('Error initializing embeddings:', error.message);
     res.status(500).json({ 
       success: false, 
-      error: 'Failed to initialize embeddings' 
+      error: 'Failed to initialize embeddings',
+      details: error.message 
     });
   }
 });
 
-// Semantic search endpoint
+// Semantic search endpoint (GET)
 router.get('/semantic', async (req, res) => {
   try {
     const { q: query, limit = 20, threshold = 0.7 } = req.query;
@@ -43,14 +67,12 @@ router.get('/semantic', async (req, res) => {
       });
     }
 
-    // Perform semantic search
-    const searchResults = await embeddingService.semanticSearch(
+    const searchResults = await req.embeddingService.semanticSearch(
       query.trim(), 
       parseInt(limit), 
       parseFloat(threshold)
     );
 
-    // Get full video details for matching videos
     if (searchResults.length === 0) {
       return res.json({
         success: true,
@@ -63,14 +85,21 @@ router.get('/semantic', async (req, res) => {
     const videoIds = searchResults.map(r => r.videoId);
     const placeholders = videoIds.map(() => '?').join(',');
     
-    const [videos] = await db.execute(`
+    const queryStr = `
       SELECT v.*, u.username as creator_name, u.avatar as creator_avatar
       FROM videos v
       LEFT JOIN users u ON v.user_id = u.id
       WHERE v.id IN (${placeholders}) AND v.status = 'published'
-    `, videoIds);
+    `;
+    console.log('Executing query for semantic search:', queryStr, videoIds);
+    const result = await db.execute(queryStr, videoIds);
+    
+    if (!result || !Array.isArray(result[0])) {
+      throw new Error('Database query returned non-iterable result');
+    }
+    
+    const videos = result[0];
 
-    // Combine video details with similarity scores
     const resultsWithScores = searchResults.map(result => {
       const video = videos.find(v => v.id === result.videoId);
       if (video) {
@@ -90,34 +119,42 @@ router.get('/semantic', async (req, res) => {
       total: resultsWithScores.length,
       search_type: 'semantic'
     });
-
   } catch (error) {
-    console.error('Error performing semantic search:', error);
+    console.error('Error performing semantic search:', error.message);
     res.status(500).json({ 
       success: false, 
-      error: 'Search failed' 
+      error: 'Search failed',
+      details: error.message 
     });
   }
 });
 
-
-// Semantic search endpoint
+// Semantic search endpoint (POST)
 router.post('/semantic', async (req, res) => {
   try {
     const { query, limit = 20, threshold = 0.7 } = req.body;
     
     if (!query) {
-      return res.status(400).json({ error: 'Query parameter is required' });
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Query parameter is required' 
+      });
     }
 
-    const results = await embeddingService.semanticSearch(query, limit, threshold);
-    res.json({ results });
+    const results = await req.embeddingService.semanticSearch(query, limit, threshold);
+    res.json({ 
+      success: true, 
+      results 
+    });
   } catch (error) {
-    console.error('Error in semantic search:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error in semantic search:', error.message);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error',
+      details: error.message 
+    });
   }
 });
-
 
 // Hybrid search endpoint
 router.get('/hybrid', async (req, res) => {
@@ -138,7 +175,6 @@ router.get('/hybrid', async (req, res) => {
       });
     }
 
-    // Get all videos for hybrid search
     let videosQuery = `
       SELECT v.*, u.username as creator_name, u.avatar as creator_avatar
       FROM videos v
@@ -153,10 +189,28 @@ router.get('/hybrid', async (req, res) => {
       queryParams.push(category);
     }
     
-    const [videos] = await db.execute(videosQuery, queryParams);
+    console.log('Executing query for hybrid search:', videosQuery, queryParams);
+    const result = await db.execute(videosQuery, queryParams);
+    
+    if (!result || !Array.isArray(result[0])) {
+      throw new Error('Database query returned non-iterable result');
+    }
+    
+    const videos = result[0];
+    console.log(`Found ${videos.length} videos for hybrid search`);
 
-    // Perform hybrid search
-    const searchResults = await embeddingService.hybridSearch(
+    if (videos.length === 0) {
+      return res.json({
+        success: true,
+        results: [],
+        query,
+        total: 0,
+        search_type: 'hybrid',
+        weights: { semantic: parseFloat(semantic_weight), keyword: parseFloat(keyword_weight) }
+      });
+    }
+
+    const searchResults = await req.embeddingService.hybridSearch(
       query.trim(),
       videos,
       parseFloat(semantic_weight),
@@ -164,7 +218,6 @@ router.get('/hybrid', async (req, res) => {
       parseInt(limit)
     );
 
-    // Get matching videos with scores
     const resultsWithScores = searchResults.map(result => {
       const video = videos.find(v => v.id === result.videoId);
       if (video) {
@@ -179,7 +232,6 @@ router.get('/hybrid', async (req, res) => {
       return null;
     }).filter(Boolean);
 
-    // Apply additional sorting if requested
     if (sort_by === 'views') {
       resultsWithScores.sort((a, b) => b.views - a.views);
     } else if (sort_by === 'likes') {
@@ -199,12 +251,12 @@ router.get('/hybrid', async (req, res) => {
         keyword: parseFloat(keyword_weight)
       }
     });
-
   } catch (error) {
-    console.error('Error performing hybrid search:', error);
+    console.error('Error performing hybrid search:', error.message);
     res.status(500).json({ 
       success: false, 
-      error: 'Search failed' 
+      error: 'Search failed',
+      details: error.message 
     });
   }
 });
@@ -214,13 +266,20 @@ router.post('/update-embedding/:videoId', async (req, res) => {
   try {
     const { videoId } = req.params;
     
-    const [videos] = await db.execute(`
+    const query = `
       SELECT id, title, description, category, tags, views, like_count, 
              duration, transcript
       FROM videos 
       WHERE id = ? AND status = 'published'
-    `, [videoId]);
-
+    `;
+    console.log('Executing query for update-embedding:', query, [videoId]);
+    const result = await db.execute(query, [videoId]);
+    
+    if (!result || !Array.isArray(result[0])) {
+      throw new Error('Database query returned non-iterable result');
+    }
+    
+    const videos = result[0];
     if (videos.length === 0) {
       return res.status(404).json({
         success: false,
@@ -228,19 +287,19 @@ router.post('/update-embedding/:videoId', async (req, res) => {
       });
     }
 
-    await embeddingService.generateVideoEmbedding(videos[0]);
-    await embeddingService.saveEmbeddings();
+    await req.embeddingService.generateVideoEmbedding(videos[0]);
+    await req.embeddingService.saveEmbeddings();
     
     res.json({
       success: true,
       message: `Updated embedding for video ${videoId}`
     });
-
   } catch (error) {
-    console.error('Error updating video embedding:', error);
+    console.error('Error updating video embedding:', error.message);
     res.status(500).json({
       success: false,
-      error: 'Failed to update embedding'
+      error: 'Failed to update embedding',
+      details: error.message
     });
   }
 });

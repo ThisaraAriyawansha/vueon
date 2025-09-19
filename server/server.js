@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const EmbeddingService = require('./services/embeddingService');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
@@ -8,16 +9,19 @@ const videoRoutes = require('./routes/videos');
 const userRoutes = require('./routes/users');
 const emailRoutes = require('./routes/email');
 const speedRoutes = require('./routes/speed');
-
 const searchRoutes = require('./routes/search');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Initialize EmbeddingService
+const embeddingService = new EmbeddingService();
+app.set('embeddingService', embeddingService);
+
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('uploads'));
+app.use(express.static('Uploads'));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -27,27 +31,22 @@ app.use('/api/email', emailRoutes);
 app.use('/api/speed', speedRoutes);
 app.use('/api/search', searchRoutes);
 
-
 // Create data directory for embeddings
 const fs = require('fs');
-
 const dataDir = path.join(__dirname, 'data');
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
-
 // Serve video files
-app.use('/videos', express.static(path.join(__dirname, 'uploads', 'videos'), {
+app.use('/videos', express.static(path.join(__dirname, 'Uploads', 'videos'), {
   setHeaders: (res, filePath) => {
-    // CORS headers
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Methods', 'GET');
     res.set('Accept-Ranges', 'bytes');
     
     const ext = path.extname(filePath).toLowerCase();
     
-    // Set Content-Type for different video formats
     if (ext === '.mp4') {
       res.set('Content-Type', 'video/mp4');
     } else if (ext === '.webm') {
@@ -62,16 +61,15 @@ app.use('/videos', express.static(path.join(__dirname, 'uploads', 'videos'), {
       res.set('Content-Type', 'video/x-matroska');
     }
     
-    // Cache control for videos
     res.set('Cache-Control', 'public, max-age=31536000');
   }
 }));
 
 // Serve avatars
-app.use('/avatars', express.static(path.join(__dirname, 'uploads', 'avatars')));
+app.use('/avatars', express.static(path.join(__dirname, 'Uploads', 'avatars')));
 
 // Serve thumbnails
-app.use('/thumbnails', express.static(path.join(__dirname, 'uploads', 'thumbnails')));
+app.use('/thumbnails', express.static(path.join(__dirname, 'Uploads', 'thumbnails')));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -80,9 +78,8 @@ app.get('/api/health', (req, res) => {
 
 // Debug endpoint to check video files
 app.get('/api/debug/video/:filename', (req, res) => {
-  const fs = require('fs');
   const { filename } = req.params;
-  const videoPath = path.join(__dirname, 'uploads', 'videos', filename);
+  const videoPath = path.join(__dirname, 'Uploads', 'videos', filename);
   
   if (!fs.existsSync(videoPath)) {
     return res.status(404).json({ error: 'Video file not found', path: videoPath });
@@ -104,8 +101,7 @@ app.get('/api/debug/video/:filename', (req, res) => {
 
 // Debug endpoint to list all videos
 app.get('/api/debug/videos', (req, res) => {
-  const fs = require('fs');
-  const videosDir = path.join(__dirname, 'uploads', 'videos');
+  const videosDir = path.join(__dirname, 'Uploads', 'videos');
   
   if (!fs.existsSync(videosDir)) {
     return res.status(404).json({ error: 'Videos directory not found', path: videosDir });
@@ -139,8 +135,7 @@ app.get('/api/debug/videos', (req, res) => {
 
 // Debug endpoint to list all thumbnails
 app.get('/api/debug/thumbnails', (req, res) => {
-  const fs = require('fs');
-  const thumbnailsDir = path.join(__dirname, 'uploads', 'thumbnails');
+  const thumbnailsDir = path.join(__dirname, 'Uploads', 'thumbnails');
   
   if (!fs.existsSync(thumbnailsDir)) {
     return res.status(404).json({ error: 'Thumbnails directory not found', path: thumbnailsDir });
