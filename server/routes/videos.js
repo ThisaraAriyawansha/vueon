@@ -219,7 +219,7 @@ router.get('/trending', (req, res) => {
   }
   
   // Add limit
-  query += ' LIMIT 20';
+  query += ' LIMIT 30';
   
   db.execute(query, params, (error, results) => {
     if (error) {
