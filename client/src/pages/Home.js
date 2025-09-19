@@ -111,7 +111,7 @@ const Home = () => {
             {/* Video Grid */}
             {videos && videos.length > 0 ? (
               <div className="grid grid-cols-1 gap-6 mb-12 md:grid-cols-2 lg:grid-cols-4">
-                {videos.map((video) => (
+                {videos.slice(0, 8).map((video) => (
                   <VideoCard key={video.id} video={video} />
                 ))}
               </div>
