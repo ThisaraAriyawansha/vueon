@@ -67,7 +67,7 @@ router.post('/initialize-embeddings', async (req, res) => {
     `;
     
     console.log('Executing database query...');
-    const [rows] = await db.promise().query(query); // ← Change to promise interface
+    const [rows] = await db.promise().query(query);
     const normalizedRows = normalizeDbResult(rows);
     
     console.log(`Normalized result: found ${normalizedRows.length} videos`);
@@ -148,12 +148,12 @@ router.post('/semantic', async (req, res) => {
       WHERE v.id IN (${placeholders}) AND v.status = 'published'
     `;
     
-    const videoResult = await db.execute(videoQuery, videoIds);
-    const videoRows = normalizeDbResult(videoResult);
+    const [videoRows] = await db.promise().query(videoQuery, videoIds);
+    const videoData = normalizeDbResult(videoRows);
 
     // Combine search results with video data
     const resultsWithDetails = searchResults.map(result => {
-      const video = videoRows.find(v => v.id === result.videoId);
+      const video = videoData.find(v => v.id === result.videoId);
       if (video) {
         return {
           ...video,
@@ -238,17 +238,17 @@ router.post('/update-embedding/:videoId', async (req, res) => {
       WHERE id = ? AND status = 'published'
     `;
     
-    const result = await db.execute(query, [parseInt(videoId)]);
-    const rows = normalizeDbResult(result);
+    const [rows] = await db.promise().query(query, [parseInt(videoId)]);
+    const videoData = normalizeDbResult(rows);
     
-    if (rows.length === 0) {
+    if (videoData.length === 0) {
       return res.status(404).json({
         success: false,
         error: 'Video not found or not published'
       });
     }
 
-    const video = rows[0];
+    const video = videoData[0];
     await req.embeddingService.generateVideoEmbedding(video);
     await req.embeddingService.saveEmbeddings();
     
@@ -277,9 +277,9 @@ router.get('/stats', async (req, res) => {
     
     // Get total video count from database
     const countQuery = 'SELECT COUNT(*) as total FROM videos WHERE status = "published"';
-    const countResult = await db.execute(countQuery);
-    const countRows = normalizeDbResult(countResult);
-    const totalVideos = countRows[0]?.total || 0;
+    const [countRows] = await db.promise().query(countQuery);
+    const countData = normalizeDbResult(countRows);
+    const totalVideos = countData[0]?.total || 0;
     
     res.json({
       success: true,
@@ -296,8 +296,6 @@ router.get('/stats', async (req, res) => {
     });
   }
 });
-
-
 
 // Clear all embeddings (for debugging)
 router.delete('/embeddings', async (req, res) => {
@@ -319,8 +317,6 @@ router.delete('/embeddings', async (req, res) => {
   }
 });
 
-
-// Debug endpoint to check database connection and video data
 // Debug endpoint to check database connection and video data
 router.get('/debug/videos', async (req, res) => {
   try {
