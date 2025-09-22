@@ -19,11 +19,14 @@ const Trending = () => {
   const [sortBy, setSortBy] = useState('views');
   const [timeFilter, setTimeFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
-  const [searchType, setSearchType] = useState('semantic'); // Default to semantic
+  const [searchType, setSearchType] = useState('semantic');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchHistory, setSearchHistory] = useState([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  // API base URL
+  const API_BASE_URL = 'http://localhost:5000/api';
 
   // Handle window resize to update isMobile state
   useEffect(() => {
@@ -61,33 +64,48 @@ const Trending = () => {
 
   // Load search history from localStorage
   useEffect(() => {
-    const savedHistory = localStorage.getItem('searchHistory');
-    if (savedHistory) {
-      setSearchHistory(JSON.parse(savedHistory));
+    try {
+      const savedHistory = localStorage.getItem('searchHistory');
+      if (savedHistory) {
+        setSearchHistory(JSON.parse(savedHistory));
+      }
+    } catch (error) {
+      console.error('Error loading search history:', error);
     }
   }, []);
 
   // Save search history to localStorage
   useEffect(() => {
     if (searchHistory.length > 0) {
-      localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+      try {
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+      } catch (error) {
+        console.error('Error saving search history:', error);
+      }
     }
   }, [searchHistory]);
 
   useEffect(() => {
     const fetchTrendingVideos = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/videos/trending');
-        setVideos(response.data);
-        setFilteredVideos(response.data);
-        setLoading(false);
+        setLoading(true);
+        const response = await axios.get(`${API_BASE_URL}/videos/trending`);
         
-        // Extract unique categories
-        const uniqueCategories = [...new Set(response.data.map(video => video.category).filter(Boolean))];
-        setCategories(uniqueCategories);
+        if (response.data && Array.isArray(response.data)) {
+          setVideos(response.data);
+          setFilteredVideos(response.data);
+          console.log('Video Data:', response.data);
+          
+          // Extract unique categories
+          const uniqueCategories = [...new Set(response.data.map(video => video.category).filter(Boolean))];
+          setCategories(uniqueCategories);
+        } else {
+          throw new Error('Invalid response format');
+        }
       } catch (error) {
         setError('Failed to load trending videos');
         console.error('Error fetching trending videos:', error);
+      } finally {
         setLoading(false);
       }
     };
@@ -103,8 +121,7 @@ const Trending = () => {
     }
 
     try {
-      // In a real app, you would call an API endpoint for suggestions
-      // For now, we'll simulate it with some intelligent suggestions
+      // Generate intelligent suggestions based on the query
       const mockSuggestions = [
         { type: 'semantic', text: `Find videos similar to "${query}"` },
         { type: 'category', text: `Search in ${selectedCategory !== 'all' ? selectedCategory : 'all categories'}` },
@@ -124,7 +141,7 @@ const Trending = () => {
     
     const updatedHistory = [
       query,
-      ...searchHistory.filter(item => item !== query).slice(0, 4) // Keep only 5 recent items
+      ...searchHistory.filter(item => item !== query).slice(0, 4)
     ];
     
     setSearchHistory(updatedHistory);
@@ -134,30 +151,32 @@ const Trending = () => {
   const performSemanticSearch = async (query) => {
     try {
       setSearchLoading(true);
-      const response = await axios.post('http://localhost:5000/api/search/semantic', {
-        query,
+      console.log('Performing semantic search for:', query);
+      
+      const response = await axios.post(`${API_BASE_URL}/search/semantic`, {
+        query: query.trim(),
         limit: 50,
         threshold: 0.5
       });
       
-      // Get video IDs from semantic search results
-      const videoIds = response.data.results.map(result => result.videoId);
+      console.log('Semantic search response:', response.data);
       
-      // Filter videos based on semantic search results
-      const semanticVideos = videos.filter(video => 
-        videoIds.includes(video.id)
-      );
-      
-      // Sort by the order of relevance from semantic search
-      semanticVideos.sort((a, b) => {
-        return videoIds.indexOf(a.id) - videoIds.indexOf(b.id);
-      });
-      
-      setFilteredVideos(semanticVideos);
-      addToSearchHistory(query);
+      if (response.data && response.data.success) {
+        const searchResults = response.data.results || [];
+        setFilteredVideos(searchResults);
+        addToSearchHistory(query);
+        
+        if (searchResults.length === 0) {
+          console.log('No semantic search results found, fallback to keyword search');
+          performKeywordSearch(query);
+        }
+      } else {
+        throw new Error(response.data?.error || 'Semantic search failed');
+      }
     } catch (error) {
       console.error('Error performing semantic search:', error);
       // Fall back to keyword search if semantic search fails
+      console.log('Falling back to keyword search...');
       performKeywordSearch(query);
     } finally {
       setSearchLoading(false);
@@ -166,15 +185,42 @@ const Trending = () => {
 
   // Perform keyword search (original functionality)
   const performKeywordSearch = (query) => {
-    const queryLower = query.toLowerCase();
-    const results = videos.filter(video => 
-      video.title.toLowerCase().includes(queryLower) || 
-      video.description.toLowerCase().includes(queryLower) ||
-      (video.tags && JSON.parse(video.tags).some(tag => tag.toLowerCase().includes(queryLower)))
-    );
-    
-    setFilteredVideos(results);
-    addToSearchHistory(query);
+    try {
+      setSearchLoading(true);
+      const queryLower = query.toLowerCase();
+      
+      const results = videos.filter(video => {
+        if (!video) return false;
+        
+        const titleMatch = video.title && video.title.toLowerCase().includes(queryLower);
+        const descMatch = video.description && video.description.toLowerCase().includes(queryLower);
+        
+        let tagsMatch = false;
+        if (video.tags) {
+          try {
+            const tags = typeof video.tags === 'string' ? JSON.parse(video.tags) : video.tags;
+            if (Array.isArray(tags)) {
+              tagsMatch = tags.some(tag => 
+                tag && tag.toString().toLowerCase().includes(queryLower)
+              );
+            }
+          } catch (e) {
+            // If tags parsing fails, ignore tags in search
+            console.warn('Failed to parse tags for video:', video.id);
+          }
+        }
+        
+        return titleMatch || descMatch || tagsMatch;
+      });
+      
+      setFilteredVideos(results);
+      addToSearchHistory(query);
+    } catch (error) {
+      console.error('Error in keyword search:', error);
+      setFilteredVideos([]);
+    } finally {
+      setSearchLoading(false);
+    }
   };
 
   // Handle search input with debounce
@@ -183,6 +229,7 @@ const Trending = () => {
       // If search query is empty, show all videos with current filters
       applyFiltersToVideos(videos);
       setSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
 
@@ -194,21 +241,26 @@ const Trending = () => {
       } else {
         performKeywordSearch(searchQuery);
       }
-    }, 500); // 500ms debounce
+    }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery, searchType]);
+  }, [searchQuery, searchType, videos]);
 
   // Apply filters to videos
   const applyFiltersToVideos = (videosToFilter) => {
+    if (!Array.isArray(videosToFilter)) {
+      console.warn('Invalid videos data for filtering');
+      return;
+    }
+
     let results = [...videosToFilter];
     
     // Apply category filter
     if (selectedCategory !== 'all') {
-      results = results.filter(video => video.category === selectedCategory);
+      results = results.filter(video => video && video.category === selectedCategory);
     }
     
-    // Apply time filter (this would need createdAt field in your database)
+    // Apply time filter
     if (timeFilter !== 'all') {
       const now = new Date();
       let filterDate = new Date();
@@ -221,18 +273,24 @@ const Trending = () => {
         filterDate.setMonth(now.getMonth() - 1);
       }
       
-      // This would require your videos to have a created_at field
-      // results = results.filter(video => new Date(video.created_at) > filterDate);
+      results = results.filter(video => {
+        if (!video || !video.created_at) return true;
+        return new Date(video.created_at) > filterDate;
+      });
     }
     
     // Apply sorting
     results.sort((a, b) => {
+      if (!a || !b) return 0;
+      
       if (sortBy === 'views') {
-        return b.views - a.views;
+        return (b.views || 0) - (a.views || 0);
       } else if (sortBy === 'likes') {
-        return b.like_count - a.like_count;
+        return (b.like_count || 0) - (a.like_count || 0);
       } else if (sortBy === 'newest') {
-        return new Date(b.created_at) - new Date(a.created_at);
+        const dateA = new Date(a.created_at || 0);
+        const dateB = new Date(b.created_at || 0);
+        return dateB - dateA;
       }
       return 0;
     });
@@ -269,6 +327,7 @@ const Trending = () => {
     setTimeFilter('all');
     setSearchType('semantic');
     setShowSuggestions(false);
+    applyFiltersToVideos(videos);
   };
 
   const toggleSearchType = () => {
@@ -293,7 +352,7 @@ const Trending = () => {
     if (!searchQuery) {
       applyFiltersToVideos(videos);
     }
-  }, [selectedCategory, sortBy, timeFilter]);
+  }, [selectedCategory, sortBy, timeFilter, videos]);
 
   if (loading) {
     return (
@@ -437,7 +496,10 @@ const Trending = () => {
                   setShowSuggestions(true);
                 }}
                 onBlur={() => {
-                  setTimeout(() => setIsSearchFocused(false), 200);
+                  setTimeout(() => {
+                    setIsSearchFocused(false);
+                    setShowSuggestions(false);
+                  }, 200);
                 }}
                 style={{ fontFamily: "'SF Pro Text', sans-serif" }}
               />
@@ -508,8 +570,6 @@ const Trending = () => {
                         key={index}
                         className="flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50"
                         onClick={() => {
-                          // For demo purposes, just set the query to the suggestion text
-                          // In a real app, you would execute the suggested search
                           setSearchQuery(suggestion.text);
                           setShowSuggestions(false);
                         }}
@@ -687,7 +747,7 @@ const Trending = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-medium text-gray-900" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
-                      {videos.reduce((sum, video) => sum + video.views, 0).toLocaleString()}
+                      {videos.reduce((sum, video) => sum + (video.views || 0), 0).toLocaleString()}
                     </h3>
                     <p className="text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Total Views</p>
                   </div>
@@ -715,7 +775,7 @@ const Trending = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-medium text-gray-900" style={{ fontFamily: "'SF Pro Display', sans-serif" }}>
-                      {videos.reduce((sum, video) => sum + video.like_count, 0).toLocaleString()}
+                      {videos.reduce((sum, video) => sum + (video.like_count || 0), 0).toLocaleString()}
                     </h3>
                     <p className="text-gray-600" style={{ fontFamily: "'SF Pro Text', sans-serif" }}>Total Likes</p>
                   </div>

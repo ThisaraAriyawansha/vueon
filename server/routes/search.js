@@ -142,7 +142,7 @@ router.post('/semantic', async (req, res) => {
     const placeholders = videoIds.map(() => '?').join(',');
     
     const videoQuery = `
-      SELECT v.*, u.username as creator_name, u.avatar as creator_avatar
+      SELECT v.*, u.username as username, u.avatar as avatar
       FROM videos v
       LEFT JOIN users u ON v.user_id = u.id
       WHERE v.id IN (${placeholders}) AND v.status = 'published'
