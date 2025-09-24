@@ -56,27 +56,5 @@ Live Demo: [vueon.vercel.app](https://vueon.vercel.app)
 - Vercel (frontend)  
 - Backend + Database on your hosting/cloud choice  
 
----
-
-## 📂 Project Structure  
-
-vueon/
-│
-├── client/ # React + Tailwind frontend
-│ ├── src/
-│ │ ├── components/ # Reusable UI components
-│ │ ├── pages/ # Page-level views
-│ │ └── utils/ # Helpers, API calls
-│ └── public/ # Static assets
-│
-├── server/ # Node.js backend
-│ ├── routes/ # API endpoints
-│ ├── controllers/ # Business logic
-│ ├── models/ # MySQL models
-│ ├── middleware/ # Auth, validation
-│ └── utils/ # AI embedding, search
-│
-├── .gitignore
-└── README.md
 
 
